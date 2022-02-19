@@ -60,8 +60,7 @@ class _CovidFormState extends State<CovidForm> {
                   elevation: 5,
                   shadowColor: Colors.grey,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16.0, vertical: 4.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
                     child: DropdownButtonHideUnderline(
                       child: DropdownButton<String>(
                         onChanged: (String? v) {
@@ -72,16 +71,12 @@ class _CovidFormState extends State<CovidForm> {
                         value: _method,
                         items: const [
                           DropdownMenuItem<String>(
-                            value: 'Method1',
-                            child: Text('Test1'),
+                            value: 'PCR',
+                            child: Text('PCR'),
                           ),
                           DropdownMenuItem(
-                            value: 'Method2',
-                            child: Text('Test2'),
-                          ),
-                          DropdownMenuItem(
-                            value: 'Method3',
-                            child: Text('Test3'),
+                            value: 'RTX',
+                            child: Text('RTX'),
                           ),
                         ],
                       ),
@@ -131,10 +126,8 @@ class _CovidFormState extends State<CovidForm> {
                         _date = await showDatePicker(
                                 context: context,
                                 initialDate: _date,
-                                firstDate:
-                                    _date.subtract(const Duration(days: 365)),
-                                lastDate:
-                                    _date.add(const Duration(days: 365))) ??
+                                firstDate: _date.subtract(const Duration(days: 365)),
+                                lastDate: _date.add(const Duration(days: 365))) ??
                             _date;
                         setState(() {});
                       },
@@ -180,17 +173,14 @@ class _CovidFormState extends State<CovidForm> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(format.format(_vaccinatedOn),
-                      style: getText(context).bodyText2),
+                  Text(format.format(_vaccinatedOn), style: getText(context).bodyText2),
                   TextButton(
                       onPressed: () async {
                         _vaccinatedOn = await showDatePicker(
                                 context: context,
                                 initialDate: _vaccinatedOn,
-                                firstDate: _vaccinatedOn
-                                    .subtract(const Duration(days: 365)),
-                                lastDate: _vaccinatedOn
-                                    .add(const Duration(days: 365))) ??
+                                firstDate: _vaccinatedOn.subtract(const Duration(days: 365)),
+                                lastDate: _vaccinatedOn.add(const Duration(days: 365))) ??
                             _date;
                         setState(() {});
                       },

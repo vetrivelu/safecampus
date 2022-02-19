@@ -6,6 +6,7 @@ import 'package:safecampus/controllers/preferences_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'controllers/auth_controller.dart';
 import 'controllers/dashboard_controller.dart';
+import 'firebase.dart';
 import 'firebase_options.dart';
 import 'routers/auth_router.dart';
 import 'routers/routes.dart';
@@ -20,6 +21,8 @@ Future<void> main() async {
   Get.put(Dashboard());
   Get.put(NotificationsController());
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  firebaseMessaging.subscribeToTopic('Announcement');
+
   runApp(const MyApp());
 }
 
@@ -44,7 +47,7 @@ class MyApp extends StatelessWidget {
           headline6: TextStyle(fontSize: 18, fontStyle: FontStyle.italic, color: Colors.white),
           bodyText1: TextStyle(fontSize: 14.0, color: Color(0xFFEF4C43)),
         ),
-        tabBarTheme: const TabBarTheme(labelColor: Colors.red),
+        tabBarTheme: const TabBarTheme(labelColor: Colors.white),
         appBarTheme: const AppBarTheme(color: Colors.redAccent),
       ),
       getPages: Routes.routes,

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:safecampus/models/assessment.dart';
 import 'package:safecampus/models/profile.dart';
 import 'package:safecampus/models/user.dart';
 import 'package:safecampus/models/response.dart' as response;
@@ -16,6 +17,8 @@ final users = firestore.collection("Users");
 class UserController extends GetxController {
   UserModel? user;
   static UserController instance = Get.find();
+  int pendingAssesments = 0;
+  List<Assessment> allAssesments = [];
 
   get name => user?.bioData.name;
   get id => user?.bioData.id;
@@ -27,9 +30,25 @@ class UserController extends GetxController {
   get countryCode => user?.bioData.countryCode;
   get phoneNumber => user?.bioData.phoneNumber;
 
+  List<String> get completedIds => user!.assessments != null ? user!.assessments!.map((e) => e.id).toList() : [];
+
+  List<Assessment> get pendingAssesmentList {
+    List<Assessment> assesments = [];
+
+    assesments = allAssesments.where((element) => !completedIds.contains(element.id)).toList();
+
+    return assesments;
+  }
+
   UserFormController get formController => UserFormController.fromProfile(user!);
 
-  loadAssessments() {}
+  @override
+  onInit() {
+    Assessment.getAssesments().listen((event) {
+      allAssesments = event.docs.map((e) => Assessment.fromJson(e.data())).toList();
+    });
+    super.onInit();
+  }
 
   listenProfile() {
     users.doc(auth.uid).snapshots().listen((snapshot) {
@@ -77,6 +96,13 @@ class UserController extends GetxController {
     });
   }
 
+  listenAssesments() {
+    users.doc(auth.uid).collection("Assessments").snapshots().listen((snapshots) {
+      user!.assessments = snapshots.docs.map((e) => Assessment.fromJson(e.data())).toList();
+      update();
+    });
+  }
+
   loadContacts() async {
     List<ContactHistory>? returns = [];
     Map? contacts = await databaseRef.child("contacts").child(auth.uid!).get().then((result) {
@@ -103,6 +129,11 @@ class UserController extends GetxController {
     }
     update();
     return returns;
+  }
+
+  Future<void> loadAssesments() async {
+    user!.assessments =
+        await users.doc(auth.uid).collection("Assessments").get().then((value) => value.docs.map((e) => Assessment.fromJson(e.data())).toList());
   }
 }
 

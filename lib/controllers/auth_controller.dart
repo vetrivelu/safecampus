@@ -17,7 +17,7 @@ class AuthController extends GetxController {
         userController.user = null;
       } else {
         userController.listenProfile();
-        userController.loadAssessments();
+        userController.listenAssesments();
         userController.listenContacts();
       }
       userController.update();
@@ -40,16 +40,14 @@ class AuthController extends GetxController {
 
   String? get uid => currentUser?.uid;
 
-  Future<User?> signInWithEmailAndPassword(
-      String email, String password) async {
+  Future<User?> signInWithEmailAndPassword(String email, String password) async {
     final userCredential = await _firebaseAuth.signInWithCredential(
       EmailAuthProvider.credential(email: email, password: password),
     );
     return userCredential.user;
   }
 
-  Future<User?> createUserWithEmailAndPassword(
-      String email, String password) async {
+  Future<User?> createUserWithEmailAndPassword(String email, String password) async {
     final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
       email: email,
       password: password,
@@ -58,10 +56,7 @@ class AuthController extends GetxController {
   }
 
   Future<String> resetPassword({required String email}) async {
-    return _firebaseAuth
-        .sendPasswordResetEmail(email: email)
-        .then((value) => "Success")
-        .catchError((error) {
+    return _firebaseAuth.sendPasswordResetEmail(email: email).then((value) => "Success").catchError((error) {
       return error.code.toString();
     });
   }

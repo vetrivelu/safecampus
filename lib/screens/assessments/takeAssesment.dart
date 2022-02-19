@@ -40,6 +40,7 @@ class _TakeAssesmentState extends State<TakeAssesment> {
                               TextButton(
                                   onPressed: () {
                                     Navigator.of(context).pop();
+                                    Navigator.of(context).pop();
                                   },
                                   child: const Text("Okay"))
                             ],

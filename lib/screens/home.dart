@@ -1,3 +1,4 @@
+import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:safecampus/constants/themeconstants.dart';
@@ -10,7 +11,6 @@ import 'package:safecampus/widgets/network_image.dart';
 import 'package:safecampus/widgets/tile_home.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
-import '../firebase.dart';
 import 'announcementpage.dart';
 import 'assessments/assesmentList.dart';
 import 'contact_list.dart';
@@ -175,13 +175,21 @@ class Home extends StatelessWidget {
               ),
               Row(
                 children: [
-                  Tile(
-                    title: 'Assesments',
-                    image: 'assets/images/profile.png',
-                    onTap: () {
-                      Get.to(() => const AssessmentList());
-                    },
-                  ),
+                  GetBuilder(
+                      init: userController,
+                      builder: (context) {
+                        return Badge(
+                          showBadge: userController.pendingAssesmentList.isNotEmpty,
+                          badgeContent: Text(userController.pendingAssesmentList.length.toString()),
+                          child: Tile(
+                            title: 'Assesments',
+                            image: 'assets/images/profile.png',
+                            onTap: () {
+                              Get.to(() => const AssessmentList());
+                            },
+                          ),
+                        );
+                      }),
                   // Expanded(
                   //     child: Card(
                   //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
