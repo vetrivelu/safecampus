@@ -182,22 +182,26 @@ class Home extends StatelessWidget {
                       Get.to(() => const AssessmentList());
                     },
                   ),
-                  Expanded(
-                      child: Card(
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-                    child: SizedBox(
-                      height: (getWidth(context) / 3) - 16,
-                      child: Center(
-                        child: ElevatedButton(
-                            onPressed: () {
-                              functions
-                                  .httpsCallable('addUser')
-                                  .call({"email": "test@gmail.com", "password": "12345678", "user": userController.user!.toJson()});
-                            },
-                            child: const Text("Test")),
-                      ),
-                    ),
-                  ))
+                  // Expanded(
+                  //     child: Card(
+                  //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+                  //   child: SizedBox(
+                  //     height: (getWidth(context) / 3) - 16,
+                  //     child: const Center(
+                  //         // child: ElevatedButton(
+                  //         //     onPressed: () {
+                  //         //       functions
+                  //         //           .httpsCallable('addUser')
+                  //         //           .call({"email": "test@gmail.com", "password": "12345678", "user": userController.user!.toJson()});
+                  //         //     },
+                  //         //     child: const Text("Test")),
+                  //         // child: Padding(
+                  //         //   padding: EdgeInsets.all(8.0),
+                  //         //   child: Text("Location status : \nYou need to have a device assigned to get the location"),
+                  //         // ),
+                  //         ),
+                  //   ),
+                  // ))
                 ],
               ),
             ],

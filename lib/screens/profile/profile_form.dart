@@ -13,6 +13,8 @@ import 'package:safecampus/widgets/custom_dropdown.dart';
 import 'package:safecampus/widgets/custom_textbox.dart';
 import 'package:safecampus/widgets/dialog.dart';
 
+enum FormMode { registration, update }
+
 class ProfileForm extends StatefulWidget {
   const ProfileForm({Key? key}) : super(key: key);
 
@@ -26,10 +28,14 @@ class _ProfileFormState extends State<ProfileForm> {
     super.initState();
     if (userController.user != null) {
       controller = userController.formController;
+      mode = FormMode.update;
     } else {
       controller = UserFormController.plain();
+      mode = FormMode.registration;
     }
   }
+
+  late FormMode mode;
 
   ImageProvider getImageProvider() {
     if (controller.localFile != null) {
@@ -53,7 +59,7 @@ class _ProfileFormState extends State<ProfileForm> {
       dashboard.departments.map((e) => DropdownMenuItem<String>(value: e, child: Text(e))).toList();
 
   Future<File?> _cropImage(String path) async {
-    File? croppedFile = await ImageCropper.cropImage(
+    File? croppedFile = await ImageCropper().cropImage(
         sourcePath: path,
         aspectRatioPresets: Platform.isAndroid
             ? [
@@ -97,16 +103,19 @@ class _ProfileFormState extends State<ProfileForm> {
         child: const Text("Submit"),
         onPressed: () {
           var future = userController.updateUser(controller);
-          showFutureDialog(
-              context: context,
-              future: future,
-              onSuccess: () {
-                Navigator.of(context).pop();
-                Get.to(() => const ProfilePage());
-              },
-              onFailure: () {
-                Navigator.of(context).pop();
-              });
+          if (mode == FormMode.update) {
+            showFutureDialog(
+                context: context,
+                future: future,
+                onSuccess: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                  // Get.offAndToNamed("/profile");
+                },
+                onFailure: () {
+                  Navigator.of(context).pop();
+                });
+          }
         },
       ),
       body: Form(
@@ -118,9 +127,12 @@ class _ProfileFormState extends State<ProfileForm> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  CircleAvatar(
-                    backgroundImage: getImageProvider(),
-                    radius: 45,
+                  Hero(
+                    tag: 'avatar',
+                    child: CircleAvatar(
+                      backgroundImage: getImageProvider(),
+                      radius: 45,
+                    ),
                   ),
                   TextButton(
                     onPressed: () async {

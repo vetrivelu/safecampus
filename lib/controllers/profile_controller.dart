@@ -159,27 +159,30 @@ class UserFormController {
       );
 
   factory UserFormController.plain() => UserFormController(
-        name: TextEditingController(),
-        department: dashboard.departments.isEmpty ? null : dashboard.departments.first,
-        deviceid: TextEditingController(),
-        groupid: TextEditingController(),
-        id: TextEditingController(),
-        superId: TextEditingController(),
-        permanentAddress: TextEditingController(),
-        countryCode: TextEditingController(),
-        phoneNumber: TextEditingController(),
-        currentAddress: TextEditingController(),
-      );
+      name: TextEditingController(),
+      department: dashboard.departments.isEmpty ? null : dashboard.departments.first,
+      deviceid: TextEditingController(),
+      groupid: TextEditingController(),
+      id: TextEditingController(),
+      superId: TextEditingController(),
+      permanentAddress: TextEditingController(),
+      countryCode: TextEditingController(),
+      phoneNumber: TextEditingController(),
+      currentAddress: TextEditingController(),
+      imageUrl: null,
+      userType: UserType.localStudent);
 
   Profile get profile => Profile(
-      id: id.text,
-      superId: superId.text,
-      email: auth.currentUser!.email!,
-      name: name.text,
-      phoneNumber: phoneNumber.text,
-      houseAddress: permanentAddress.text,
-      residenceAddress: currentAddress.text,
-      countryCode: countryCode.text,
-      department: department!,
-      userType: userType);
+        id: id.text,
+        superId: superId.text,
+        email: auth.currentUser!.email!,
+        name: name.text,
+        phoneNumber: phoneNumber.text,
+        houseAddress: permanentAddress.text,
+        residenceAddress: currentAddress.text,
+        countryCode: countryCode.text,
+        department: department!,
+        userType: userType,
+        imageUrl: imageUrl,
+      );
 }

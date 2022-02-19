@@ -2,12 +2,15 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
+import 'package:safecampus/controllers/preferences_controller.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'controllers/auth_controller.dart';
 import 'controllers/dashboard_controller.dart';
 import 'firebase_options.dart';
 import 'routers/auth_router.dart';
 import 'routers/routes.dart';
 
+final Future<SharedPreferences> prefs = SharedPreferences.getInstance();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -15,6 +18,7 @@ Future<void> main() async {
   );
   Get.put(AuthController());
   Get.put(Dashboard());
+  Get.put(NotificationsController());
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   runApp(const MyApp());
 }

@@ -50,6 +50,7 @@ dependencies:
   image_cropper: ^1.4.1
   table_calendar: ^3.0.3
   quiver: ^3.0.1+1
+  shared_preferences: ^2.0.13
 
 dev_dependencies:
   flutter_test:

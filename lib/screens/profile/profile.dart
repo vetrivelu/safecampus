@@ -63,24 +63,27 @@ class ProfilePage extends StatelessWidget {
                                         child: Material(
                                           elevation: 20,
                                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
-                                          child: Container(
-                                            margin: const EdgeInsets.all(5),
-                                            width: MediaQuery.of(context).size.width * 0.3,
-                                            height: MediaQuery.of(context).size.width * 0.3,
-                                            clipBehavior: Clip.antiAlias,
-                                            decoration: const BoxDecoration(
-                                              shape: BoxShape.circle,
+                                          child: Hero(
+                                            tag: "avatar",
+                                            child: Container(
+                                              margin: const EdgeInsets.all(5),
+                                              width: MediaQuery.of(context).size.width * 0.3,
+                                              height: MediaQuery.of(context).size.width * 0.3,
+                                              clipBehavior: Clip.antiAlias,
+                                              decoration: const BoxDecoration(
+                                                shape: BoxShape.circle,
+                                              ),
+                                              child: userController.user!.bioData.imageUrl != null
+                                                  ? Image.network(
+                                                      userController.user!.bioData.imageUrl!,
+                                                      fit: BoxFit.fitHeight,
+                                                    )
+                                                  : const Icon(
+                                                      Icons.person,
+                                                      color: Colors.black,
+                                                      size: 100,
+                                                    ),
                                             ),
-                                            child: userController.user!.bioData.imageUrl != null
-                                                ? Image.network(
-                                                    userController.user!.bioData.imageUrl!,
-                                                    fit: BoxFit.fitHeight,
-                                                  )
-                                                : const Icon(
-                                                    Icons.person,
-                                                    color: Colors.black,
-                                                    size: 100,
-                                                  ),
                                           ),
                                         ),
                                       ),
