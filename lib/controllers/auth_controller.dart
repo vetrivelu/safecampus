@@ -11,16 +11,13 @@ class AuthController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    Get.put(UserController());
+    Get.put(UserController(null));
     authStateChanges().listen((user) {
       if (user == null) {
         userController.user = null;
       } else {
-        userController.listenProfile();
-        userController.listenAssesments();
-        userController.listenContacts();
+        userController.loadProfile();
       }
-      userController.update();
     });
   }
 

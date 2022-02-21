@@ -2,11 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path/path.dart';
 import 'package:safecampus/constants/themeconstants.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 
 class ImageList extends StatefulWidget {
   const ImageList({Key? key}) : super(key: key);

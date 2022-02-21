@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:safecampus/constants/colors.dart';
+import 'package:safecampus/controllers/profile_controller.dart';
 import 'package:safecampus/models/user.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 class QuarantinePage extends StatefulWidget {
   const QuarantinePage({Key? key, required this.user}) : super(key: key);
@@ -12,11 +14,14 @@ class QuarantinePage extends StatefulWidget {
 class _QuarantinePageState extends State<QuarantinePage> {
   @override
   void initState() {
-    daysLeft = widget.user.quarantine != null ? widget.user.quarantine!.endDate.difference(DateTime.now()).inDays : 0;
     super.initState();
   }
 
-  int daysLeft = 0;
+  int get daysLeft =>
+      userController.user!.quarantine!.endDate.difference(DateTime.utc(DateTime.now().year, DateTime.now().month, DateTime.now().day)).inDays + 1;
+  // int get daysLeft =>
+  //     DateTime.utc(DateTime.now().year, DateTime.now().month, DateTime.now().day).difference(userController.user!.quarantine!.endDate).inDays;
+
   @override
   Widget build(BuildContext context) {
     // final date =widget.user.quarantine!;
@@ -36,30 +41,29 @@ class _QuarantinePageState extends State<QuarantinePage> {
                 const SizedBox(
                   height: 10,
                 ),
-                Center(
-                  child: Image.asset(
-                    'assets/studenthomepage/quarantinehistroy.png',
-                    height: MediaQuery.of(context).size.height * 0.35,
-                    fit: BoxFit.contain,
-                  ),
+                TableCalendar(
+                  focusedDay: DateTime.now(),
+                  firstDay: DateTime.utc(2015),
+                  lastDay: DateTime.utc(2023),
+                  rangeStartDay: userController.user!.quarantine?.startDate,
+                  rangeEndDay: userController.user!.quarantine?.endDate,
                 ),
-
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
+                  padding: const EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
                   child: widget.user.quarantine != null
                       ? Container(
                           width: MediaQuery.of(context).size.width * 0.9,
                           height: MediaQuery.of(context).size.height * 0.15,
                           decoration: BoxDecoration(
-                            color: Color(0xFFEC4338),
+                            color: const Color(0xFFEC4338),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text("$daysLeft", style: TextStyle(fontSize: 60, fontWeight: FontWeight.bold, color: Colors.white)),
-                              Text("days left", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white)),
+                              Text("$daysLeft", style: const TextStyle(fontSize: 60, fontWeight: FontWeight.bold, color: Colors.white)),
+                              const Text("days left", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white)),
                             ],
                           ),
                         )

@@ -1,12 +1,25 @@
 import 'package:get/get.dart';
+import 'package:safecampus/models/department.dart';
 
 import '../firebase.dart';
 
 class Dashboard extends GetxController {
   static Dashboard instance = Get.find();
   List<dynamic> carouselItems = [];
-  List<dynamic> departments = [];
+  List<Department> departments = [];
   Map<String, dynamic> locations = {};
+
+  String? getName(String? id) {
+    if (id == null) {
+      return null;
+    }
+    try {
+      var department = departments.firstWhere((element) => element.id == id);
+      return department.name;
+    } catch (e) {
+      return null;
+    }
+  }
 
   @override
   onInit() {
@@ -17,11 +30,7 @@ class Dashboard extends GetxController {
   }
 
   loadLocations() {
-    firestore
-        .collection('dashboard')
-        .doc('Location')
-        .snapshots()
-        .listen((snapshot) {
+    firestore.collection('dashboard').doc('Location').snapshots().listen((snapshot) {
       if (snapshot.exists) {
         locations = snapshot.data()!;
       }
@@ -30,11 +39,7 @@ class Dashboard extends GetxController {
   }
 
   loadCaruosel() {
-    firestore
-        .collection('dashboard')
-        .doc('carousel')
-        .snapshots()
-        .listen((snapshot) {
+    firestore.collection('dashboard').doc('carousel').snapshots().listen((snapshot) {
       var urls = snapshot.data()?["imageUrl"];
       carouselItems = urls ?? [];
       // print(carouselItems);
@@ -45,15 +50,9 @@ class Dashboard extends GetxController {
   // departments = snapshot.data()!.values.toList();
 
   loadDepartments() {
-    firestore
-        .collection('dashboard')
-        .doc('Departments')
-        .snapshots()
-        .listen((snapshot) {
+    firestore.collection('dashboard').doc('departments').snapshots().listen((snapshot) {
       if (snapshot.exists) {
-        departments = snapshot.data() != null
-            ? snapshot.data()!.values.toList()
-            : departments;
+        departments = snapshot.data() != null ? snapshot.data()!.values.map((e) => Department.fromJson(e)).toList() : departments;
         update();
       }
     });

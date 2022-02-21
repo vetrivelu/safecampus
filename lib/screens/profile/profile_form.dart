@@ -8,7 +8,9 @@ import 'package:safecampus/controllers/auth_controller.dart';
 import 'package:safecampus/controllers/dashboard_controller.dart';
 import 'package:safecampus/controllers/profile_controller.dart';
 import 'package:safecampus/models/profile.dart';
+import 'package:safecampus/models/user.dart';
 import 'package:safecampus/screens/profile/profile.dart';
+import 'package:safecampus/screens/status/covid_history.dart';
 import 'package:safecampus/widgets/custom_dropdown.dart';
 import 'package:safecampus/widgets/custom_textbox.dart';
 import 'package:safecampus/widgets/dialog.dart';
@@ -28,6 +30,7 @@ class _ProfileFormState extends State<ProfileForm> {
     super.initState();
     if (userController.user != null) {
       controller = userController.formController;
+      dashboard.getName(controller.department) == null ? controller.department = null : doNothing();
       mode = FormMode.update;
     } else {
       controller = UserFormController.plain();
@@ -56,7 +59,7 @@ class _ProfileFormState extends State<ProfileForm> {
       .toList();
 
   List<DropdownMenuItem<String?>>? get departmentItems =>
-      dashboard.departments.map((e) => DropdownMenuItem<String>(value: e, child: Text(e))).toList();
+      dashboard.departments.map((e) => DropdownMenuItem<String>(value: e.id, child: Text(e.name))).toList();
 
   Future<File?> _cropImage(String path) async {
     File? croppedFile = await ImageCropper().cropImage(
@@ -91,6 +94,8 @@ class _ProfileFormState extends State<ProfileForm> {
     return croppedFile;
   }
 
+  final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -102,144 +107,154 @@ class _ProfileFormState extends State<ProfileForm> {
       floatingActionButton: ElevatedButton(
         child: const Text("Submit"),
         onPressed: () {
-          var future = userController.updateUser(controller);
-          if (mode == FormMode.update) {
-            showFutureDialog(
-                context: context,
-                future: future,
-                onSuccess: () {
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pop();
-                  // Get.offAndToNamed("/profile");
-                },
-                onFailure: () {
-                  Navigator.of(context).pop();
-                });
+          if (_formKey.currentState!.validate()) {
+            if (mode == FormMode.update) {
+              var future = userController.updateUser(controller);
+              showFutureDialog(
+                  context: context,
+                  future: future,
+                  onSuccess: () {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pop();
+                    // Get.offAndToNamed("/profile");
+                  },
+                  onFailure: () {
+                    Navigator.of(context).pop();
+                  });
+            }
+            userController.createUser(UserModel(bioData: controller.profile, uid: auth.uid!));
           }
         },
       ),
       body: Form(
+          key: _formKey,
           child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            padding: const EdgeInsets.all(8.0),
+            child: SingleChildScrollView(
+              child: Column(
                 children: [
-                  Hero(
-                    tag: 'avatar',
-                    child: CircleAvatar(
-                      backgroundImage: getImageProvider(),
-                      radius: 45,
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () async {
-                      var xfile = await ImagePicker().pickImage(source: ImageSource.gallery);
-                      if (xfile != null) {
-                        controller.localFile = await _cropImage(xfile.path);
-                      }
-                      setState(() {});
-                    },
-                    child: const Text(
-                      'Change Profile Picture',
-                      style: TextStyle(
-                        color: Colors.red,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const Divider(),
-              CustomTextBox(
-                  controller: TextEditingController(text: auth.currentUser!.email), hintText: 'Your Email', labelText: 'Email', enabled: false),
-              Table(
-                columnWidths: const {
-                  1: FlexColumnWidth(1.5),
-                  2: FlexColumnWidth(1),
-                },
-                children: [
-                  TableRow(
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 4),
-                        child: CustomDropDown<UserType>(
-                          selectedValue: controller.userType,
-                          labelText: "User Type",
-                          items: userTypeItems,
-                          onChanged: (value) {
-                            setState(() {
-                              controller.userType = value ?? controller.userType;
-                            });
-                          },
-                          hintText: '',
+                      Hero(
+                        tag: 'avatar',
+                        child: CircleAvatar(
+                          backgroundImage: getImageProvider(),
+                          radius: 45,
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 4),
-                        child: GetBuilder(
-                            init: dashboard,
-                            builder: (context) {
-                              return CustomDropDown<String?>(
-                                  selectedValue: controller.department,
-                                  items: departmentItems,
-                                  labelText: "Department",
-                                  onChanged: (value) {
-                                    controller.department = value ?? controller.department;
-                                  });
-                            }),
+                      TextButton(
+                        onPressed: () async {
+                          var xfile = await ImagePicker().pickImage(source: ImageSource.gallery);
+                          if (xfile != null) {
+                            controller.localFile = await _cropImage(xfile.path);
+                          }
+                          setState(() {});
+                        },
+                        child: const Text(
+                          'Change Profile Picture',
+                          style: TextStyle(
+                            color: Colors.red,
+                          ),
+                        ),
                       ),
                     ],
                   ),
-                ],
-              ),
-              const Divider(),
-              CustomTextBox(controller: controller.name, hintText: 'Enter your Name', labelText: 'Name', keyboardType: TextInputType.name),
-              CustomTextBox(controller: controller.id, labelText: "ID", hintText: "Enter ID", keyboardType: TextInputType.text),
-              CustomTextBox(
-                  controller: controller.superId,
-                  hintText: 'Enter your Passport or IC Number',
-                  labelText: controller.userType == UserType.foreignStudent ? 'Passport Number' : 'IC Number',
-                  keyboardType: TextInputType.name),
-              Table(
-                columnWidths: const {1: FlexColumnWidth(2)},
-                children: [
-                  TableRow(
+                  const Divider(),
+                  CustomTextBox(
+                      controller: TextEditingController(text: auth.currentUser!.email), hintText: 'Your Email', labelText: 'Email', enabled: false),
+                  Table(
+                    columnWidths: const {
+                      1: FlexColumnWidth(1.5),
+                      2: FlexColumnWidth(1),
+                    },
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 4.0),
-                        child:
-                            CustomTextBox(controller: controller.countryCode, labelText: "Code", hintText: "+60", keyboardType: TextInputType.text),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 4.0),
-                        child: CustomTextBox(
-                            controller: controller.phoneNumber, labelText: "Phone", hintText: "Enter Phone Number", keyboardType: TextInputType.text),
+                      TableRow(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(right: 4),
+                            child: CustomDropDown<UserType>(
+                              selectedValue: controller.userType,
+                              labelText: "User Type",
+                              items: userTypeItems,
+                              onChanged: (value) {
+                                setState(() {
+                                  controller.userType = value ?? controller.userType;
+                                });
+                              },
+                              hintText: '',
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 4),
+                            child: GetBuilder(
+                                init: dashboard,
+                                builder: (context) {
+                                  return CustomDropDown<String?>(
+                                      validator: (value) {
+                                        return value != null ? null : "Please select a department";
+                                      },
+                                      selectedValue: controller.department,
+                                      items: departmentItems,
+                                      labelText: "Department",
+                                      onChanged: (value) {
+                                        controller.department = value ?? controller.department;
+                                      });
+                                }),
+                          ),
+                        ],
                       ),
                     ],
                   ),
+                  const Divider(),
+                  CustomTextBox(controller: controller.name, hintText: 'Enter your Name', labelText: 'Name', keyboardType: TextInputType.name),
+                  CustomTextBox(controller: controller.id, labelText: "ID", hintText: "Enter ID", keyboardType: TextInputType.text),
+                  CustomTextBox(
+                      controller: controller.superId,
+                      hintText: 'Enter your Passport or IC Number',
+                      labelText: controller.userType == UserType.foreignStudent ? 'Passport Number' : 'IC Number',
+                      keyboardType: TextInputType.name),
+                  Table(
+                    columnWidths: const {1: FlexColumnWidth(2)},
+                    children: [
+                      TableRow(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(right: 4.0),
+                            child: CustomTextBox(
+                                controller: controller.countryCode, labelText: "Code", hintText: "+60", keyboardType: TextInputType.phone),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 4.0),
+                            child: CustomTextBox(
+                                controller: controller.phoneNumber,
+                                labelText: "Phone",
+                                hintText: "Enter Phone Number",
+                                keyboardType: TextInputType.phone),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  CustomTextBox(
+                    controller: controller.permanentAddress,
+                    hintText: 'Enter Permanent Address',
+                    labelText: "Permanent Address",
+                    keyboardType: TextInputType.multiline,
+                    maxLines: 4,
+                  ),
+                  CustomTextBox(
+                    controller: controller.currentAddress,
+                    hintText: 'Enter Current Address',
+                    labelText: "Current Address",
+                    keyboardType: TextInputType.multiline,
+                    maxLines: 4,
+                  ),
+                  const SizedBox(height: 50)
                 ],
               ),
-              CustomTextBox(
-                controller: controller.permanentAddress,
-                hintText: 'Enter Permanent Address',
-                labelText: "Permanent Address",
-                keyboardType: TextInputType.multiline,
-                maxLines: 4,
-              ),
-              CustomTextBox(
-                controller: controller.currentAddress,
-                hintText: 'Enter Current Address',
-                labelText: "Current Address",
-                keyboardType: TextInputType.multiline,
-                maxLines: 4,
-              ),
-              const SizedBox(height: 50)
-            ],
-          ),
-        ),
-      )),
+            ),
+          )),
     );
   }
 }

@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:safecampus/models/profile.dart';
 import 'package:safecampus/routers/auth_router.dart';
 import 'package:safecampus/screens/profile/profile.dart';
 

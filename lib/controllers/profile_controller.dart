@@ -20,6 +20,8 @@ class UserController extends GetxController {
   int pendingAssesments = 0;
   List<Assessment> allAssesments = [];
 
+  UserController(this.user);
+
   get name => user?.bioData.name;
   get id => user?.bioData.id;
   get superId => user?.bioData.superId;
@@ -35,19 +37,26 @@ class UserController extends GetxController {
   List<Assessment> get pendingAssesmentList {
     List<Assessment> assesments = [];
 
+    if (completedIds.isEmpty) {
+      return allAssesments;
+    }
     assesments = allAssesments.where((element) => !completedIds.contains(element.id)).toList();
-
     return assesments;
   }
 
   UserFormController get formController => UserFormController.fromProfile(user!);
 
-  @override
-  onInit() {
-    Assessment.getAssesments().listen((event) {
-      allAssesments = event.docs.map((e) => Assessment.fromJson(e.data())).toList();
+  loadProfile() {
+    users.doc(auth.uid).get().then((value) {
+      if (value.exists) {
+        user = UserModel.fromJson(value.data()!);
+        listenProfile();
+        listenContacts();
+        listenAssesments();
+        listenMyAssesments();
+      }
     });
-    super.onInit();
+    update();
   }
 
   listenProfile() {
@@ -62,22 +71,20 @@ class UserController extends GetxController {
   }
 
   void createUser(UserModel user) {
-    users.doc(user.uid).set(user.toJson()).then((value) => null).catchError((error) => null);
+    users.doc(user.uid).set(user.toJson()).then((value) => updateProfileinRTDB()).catchError((error) => null);
   }
 
-  updateUser(UserFormController controller) async {
+  Future updateUser(UserFormController controller) async {
     var profile = controller.profile;
     if (controller.localFile != null) {
-      profile.imageUrl = await storage.ref("profiles").child(user!.uid).putFile(controller.localFile!).then((snapshot) async {
+      profile.imageUrl = await storage.ref("profiles").child(auth.uid!).putFile(controller.localFile!).then((snapshot) async {
         return await snapshot.ref.getDownloadURL();
       });
     }
-
-    return users
-        .doc(auth.uid)
-        .update({"bioData": profile.toJson()})
-        .then((value) => response.Response.success("User Profile updated successfully"))
-        .catchError((error) => response.Response.error(error.toString()));
+    return users.doc(auth.uid).update({"bioData": profile.toJson()}).then((value) {
+      updateProfileinRTDB();
+      return response.Response.success("User Profile updated successfully");
+    }).catchError((error) => response.Response.error(error.toString()));
   }
 
   Future<response.Response> addCovidInfo(CovidInfo covidInfo) async {
@@ -90,6 +97,26 @@ class UserController extends GetxController {
         .onError((error, stackTrace) => response.Response.error(error.toString()));
   }
 
+  Future<response.Response> removeCovidInfo(int index) async {
+    var history = user?.covidHistory ?? [];
+    history.removeAt(index);
+    return await users
+        .doc(auth.uid)
+        .update({"covidHistory": history.map((e) => e.toJson()).toList()})
+        .then((value) => response.Response.success("Covid Information added"))
+        .onError((error, stackTrace) => response.Response.error(error.toString()));
+  }
+
+  updateToken() {
+    firebaseMessaging.getToken().then((value) => users.doc(auth.uid!).update({"fcm": value}).then((value) => updateProfileinRTDB()));
+  }
+
+  updateProfileinRTDB() {
+    if (user != null) {
+      databaseRef.child('users').child(auth.uid!).set(user!.toRTDBJson());
+    }
+  }
+
   listenContacts() {
     databaseRef.child("contacts").child(auth.uid!).onValue.listen((event) {
       loadContacts();
@@ -97,6 +124,13 @@ class UserController extends GetxController {
   }
 
   listenAssesments() {
+    Assessment.getAssesments().listen((snapshots) {
+      allAssesments = snapshots.docs.map((e) => Assessment.fromJson(e.data())).toList();
+      update();
+    });
+  }
+
+  listenMyAssesments() {
     users.doc(auth.uid).collection("Assessments").snapshots().listen((snapshots) {
       user!.assessments = snapshots.docs.map((e) => Assessment.fromJson(e.data())).toList();
       update();
@@ -191,13 +225,13 @@ class UserFormController {
 
   factory UserFormController.plain() => UserFormController(
       name: TextEditingController(),
-      department: dashboard.departments.isEmpty ? null : dashboard.departments.first,
+      department: dashboard.departments.isEmpty ? null : dashboard.departments.first.id,
       deviceid: TextEditingController(),
       groupid: TextEditingController(),
       id: TextEditingController(),
       superId: TextEditingController(),
       permanentAddress: TextEditingController(),
-      countryCode: TextEditingController(),
+      countryCode: TextEditingController(text: '+'),
       phoneNumber: TextEditingController(),
       currentAddress: TextEditingController(),
       imageUrl: null,

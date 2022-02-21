@@ -1,9 +1,14 @@
+// ignore_for_file: avoid_print
+
 import 'package:badges/badges.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:safecampus/constants/themeconstants.dart';
 import 'package:safecampus/controllers/auth_controller.dart';
 import 'package:safecampus/controllers/dashboard_controller.dart';
+
 import 'package:safecampus/controllers/profile_controller.dart';
 import 'package:safecampus/screens/profile/profile.dart';
 
@@ -11,14 +16,77 @@ import 'package:safecampus/widgets/network_image.dart';
 import 'package:safecampus/widgets/tile_home.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
+import '../main.dart';
 import 'announcementpage.dart';
-import 'assessments/assesmentList.dart';
+import 'assessments/assesment_list.dart';
 import 'contact_list.dart';
+import 'notificationpage.dart';
+import 'quarantine.dart';
 import 'status/covid_history.dart';
 import 'whistleblower.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
+
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+  _getToken() {
+    userController.updateToken();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _firebaseMessaging.getInitialMessage().then((message) {
+      if (message != null) {
+        final routeFromMessage = message.data["route"];
+        print(routeFromMessage);
+      }
+    });
+
+    FirebaseMessaging.onMessage.listen((message) async {
+      if (message.notification != null) {
+        flutterLocalNotificationsPlugin.show(1, message.notification!.title, message.notification!.body,
+            NotificationDetails(android: AndroidNotificationDetails(channel.id, channel.name, channelDescription: channel.description)));
+        var preferences = await prefs;
+        preferences.setStringList(DateTime.now().toIso8601String().substring(0, 19) + ".000000",
+            [message.notification!.body.toString(), message.notification!.title.toString()]);
+        print(message.notification!.body);
+        print(message.notification!.title);
+        print("message");
+      }
+    });
+
+    FirebaseMessaging.onBackgroundMessage((message) async {
+      if (message.notification != null) {
+        var preferences = await prefs;
+        preferences.setStringList(DateTime.now().toIso8601String().substring(0, 19) + ".000000",
+            [message.notification!.body.toString(), message.notification!.title.toString()]);
+        print(message.notification!.body);
+        print(message.notification!.title);
+        print("message");
+      }
+      return;
+    });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((message) async {
+      if (message.notification != null) {
+        var preferences = await prefs;
+        preferences.setStringList(DateTime.now().toIso8601String(), [message.notification!.body.toString(), message.notification!.title.toString()]);
+        // print(message.notification!.body);
+        // print(message.notification!.title);
+        // print("message");
+      }
+    });
+    _firebaseMessaging.setForegroundNotificationPresentationOptions(alert: true);
+    _firebaseMessaging.subscribeToTopic('Announcement');
+
+    _getToken();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +135,7 @@ class Home extends StatelessWidget {
               ),
               color: const Color(0xFFED392D),
               onPressed: () {
-                // Get.to(()=>NotificationPage());
+                Get.to(() => const NotificationPage());
               },
             ),
           )
@@ -93,39 +161,6 @@ class Home extends StatelessWidget {
                   );
                 }),
           ),
-          // Padding(
-          //   padding: const EdgeInsets.all(4.0),
-          //   child: Card(
-          //       child: Table(
-          //     columnWidths: const {
-          //       1: FlexColumnWidth(1),
-          //       2: FlexColumnWidth(3)
-          //     },
-          //     children: const [
-          //       TableRow(
-          //         children: [
-          //           PaddedText("Beacon Status",
-          //               style: TextStyle(fontWeight: FontWeight.bold)),
-          //           PaddedText("Active"),
-          //         ],
-          //       ),
-          //       TableRow(
-          //         children: [
-          //           PaddedText("Current Location",
-          //               style: TextStyle(fontWeight: FontWeight.bold)),
-          //           PaddedText("B Hall (GateWay)"),
-          //         ],
-          //       ),
-          //       TableRow(
-          //         children: [
-          //           PaddedText("Current Location",
-          //               style: TextStyle(fontWeight: FontWeight.bold)),
-          //           PaddedText("B Hall (GateWay)"),
-          //         ],
-          //       ),
-          //     ],
-          //   )),
-          // ),
           const Divider(),
           PaddedText("Menu", style: getText(context).subtitle1!.copyWith(fontWeight: FontWeight.bold)),
           Wrap(
@@ -149,7 +184,9 @@ class Home extends StatelessWidget {
                 title: 'Solitary',
                 image: 'assets/images/virus-protection-512x512-1833388.png',
                 onTap: () {
-                  // Get.to(() => const WhistleBlower());
+                  Get.to(() => QuarantinePage(
+                        user: userController.user!,
+                      ));
                 },
               ),
               Tile(

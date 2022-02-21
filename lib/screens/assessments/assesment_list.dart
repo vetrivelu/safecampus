@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:safecampus/controllers/profile_controller.dart';
-import 'package:safecampus/screens/assessments/takeAssesment.dart';
+import 'package:safecampus/screens/assessments/take_assesment.dart';
 
 class AssessmentList extends StatelessWidget {
   const AssessmentList({Key? key}) : super(key: key);
@@ -38,7 +38,10 @@ class AssessmentList extends StatelessWidget {
                                 child: ListTile(
                                     title: Text(userController.pendingAssesmentList[index].title),
                                     onTap: () {
-                                      Get.to(() => TakeAssesment(assessment: userController.pendingAssesmentList[index]));
+                                      Get.to(() => TakeAssesment(
+                                            assessment: userController.pendingAssesmentList[index],
+                                            canEdit: true,
+                                          ));
                                     }),
                               );
                             }),
@@ -48,10 +51,13 @@ class AssessmentList extends StatelessWidget {
                           return Card(
                               child: ListTile(
                             title: Text(userController.user!.assessments![index].title),
-                            // subtitle: Text(userController.user!.assessments![index].createdDate.toString()),
-                            // onTap: () {
-                            //   Get.to(() => TakeAssesment(assessment: userController.user!.assessments![index]));
-                            // }),
+                            subtitle: Text(userController.user!.assessments![index].createdDate.toString()),
+                            onTap: () {
+                              Get.to(() => TakeAssesment(
+                                    assessment: userController.user!.assessments![index],
+                                    canEdit: false,
+                                  ));
+                            },
                           ));
                         }),
                   ],

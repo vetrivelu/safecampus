@@ -39,7 +39,6 @@ class _AnnouncementWidgetState extends State<AnnouncementWidget> {
           items.add(Announcement.fromJson(snap.data()));
         }
       }
-      print('items: ' + items.toString());
     });
   }
 
@@ -56,7 +55,7 @@ class _AnnouncementWidgetState extends State<AnnouncementWidget> {
             fontWeight: FontWeight.w700,
           ),
         ),
-        actions: [],
+        actions: const [],
         centerTitle: true,
         elevation: 0,
       ),

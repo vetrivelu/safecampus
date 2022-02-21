@@ -54,14 +54,14 @@ class Assessment {
   int get totalQuestions => questions.length;
 
   bool get canSubmit {
-    bool status = true;
+    bool value = true;
     for (Question question in questions) {
       if (!question.isGoodToSubmit) {
-        status = false;
-        return status;
+        value = false;
+        return value;
       }
     }
-    return status;
+    return value;
   }
 
   CollectionReference<Map<String, dynamic>> getAssesmentCollection(String uid) {

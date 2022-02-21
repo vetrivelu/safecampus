@@ -10,12 +10,13 @@ class CustomDropDown<T> extends StatelessWidget {
     this.onTap,
     this.leftPad = 20,
     required this.selectedValue,
+    this.validator,
   }) : super(key: key);
 
   final String labelText;
   final String? hintText;
   final T? selectedValue;
-
+  final String? Function(T?)? validator;
   final void Function(T?)? onChanged;
   final void Function()? onTap;
   final double? leftPad;
@@ -27,6 +28,7 @@ class CustomDropDown<T> extends StatelessWidget {
     return DropdownButtonFormField<T>(
       isExpanded: false,
       value: selectedValue,
+      validator: validator,
       onChanged: onChanged,
       onTap: onTap,
       decoration: InputDecoration(

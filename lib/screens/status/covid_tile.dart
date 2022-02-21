@@ -9,9 +9,11 @@ class CovidTile extends StatelessWidget {
   const CovidTile({
     Key? key,
     required this.covidInfo,
+    this.onTap,
   }) : super(key: key);
 
   final CovidInfo covidInfo;
+  final void Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +23,8 @@ class CovidTile extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Table(
-            textBaseline: TextBaseline.ideographic,
+            // textBaseline: TextBaseline.alphabetic,
+            defaultVerticalAlignment: TableCellVerticalAlignment.middle,
             columnWidths: const {0: FlexColumnWidth(2), 1: FlexColumnWidth(2)},
             children: [
               TableRow(
@@ -29,7 +32,7 @@ class CovidTile extends StatelessWidget {
                   const Text("Test Date"),
                   Text(": ${format.format(covidInfo.date!)}"),
                   Container(
-                    height: 30,
+                    height: 20,
                     width: 60,
                     child: Center(
                       child: Text(
@@ -48,14 +51,16 @@ class CovidTile extends StatelessWidget {
                 children: [
                   const Text("Test Method"),
                   Text(": ${covidInfo.method.toString()}"),
-                  Container(height: 30),
+                  Container(
+                    height: 25,
+                  ),
                 ],
               ),
               TableRow(
                 children: [
                   const Text("Vaccination Date"),
                   Text(": ${covidInfo.vaccinated ? format.format(covidInfo.vaccinatedOn!) : "Not vaccinated"} "),
-                  Container(height: 30),
+                  Container()
                 ],
               ),
             ],

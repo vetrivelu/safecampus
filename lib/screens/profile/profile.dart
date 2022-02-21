@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 // import 'package:pert/models/profile_model.dart';
 import 'package:fluttericon/font_awesome5_icons.dart';
+import 'package:safecampus/controllers/dashboard_controller.dart';
 import 'package:safecampus/controllers/profile_controller.dart';
 import 'package:safecampus/models/profile.dart';
 import 'package:safecampus/screens/profile/profile_form.dart';
@@ -17,6 +18,15 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        floatingActionButton: FloatingActionButton.small(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          child: const Icon(Icons.arrow_back_ios),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
         body: // Generated code for this Column Widget...
 
             GetBuilder(
@@ -108,7 +118,7 @@ class ProfilePage extends StatelessWidget {
                                       ),
                                       Center(
                                           child: Text(
-                                        userController.user!.bioData.department,
+                                        dashboard.getName(userController.user!.bioData.department) ?? "Not Assigned",
                                         style: const TextStyle(color: Colors.white, shadows: [Shadow(blurRadius: 2)]),
                                       )),
                                     ],
@@ -233,7 +243,7 @@ class ProfilePage extends StatelessWidget {
                             subtitle: Padding(
                               padding: const EdgeInsets.only(top: 10),
                               child: Text(
-                                userController.user!.bioData.department,
+                                dashboard.getName(userController.user!.bioData.department) ?? "Not Assigned",
                                 style: const TextStyle(
                                   fontFamily: 'Lexend Deca',
                                   color: Colors.black,

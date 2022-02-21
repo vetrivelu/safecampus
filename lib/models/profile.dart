@@ -2,11 +2,6 @@
 //
 //     final profile = profileFromJson(jsonString);
 import 'dart:convert';
-import 'dart:io';
-
-import 'package:image_picker/image_picker.dart';
-
-import '../firebase.dart';
 
 Profile profileFromJson(String str) => Profile.fromJson(json.decode(str));
 

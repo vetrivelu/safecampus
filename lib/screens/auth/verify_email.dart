@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:safecampus/controllers/auth_controller.dart';
 
-
 class VerifyEmail extends StatefulWidget {
   const VerifyEmail({Key? key}) : super(key: key);
 
@@ -23,7 +22,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
     Timer.periodic(const Duration(seconds: 5), (timer) {
       auth.currentUser!.reload();
       _timer = timer;
-      auth.currentUser!.getIdTokenResult().then((value) => print(value.claims));
+      auth.currentUser!.getIdTokenResult().then((value) => null);
       if (auth.currentUser!.emailVerified) {
         Navigator.of(context).popAndPushNamed('/');
         timer.cancel();
@@ -64,15 +63,13 @@ class _VerifyEmailState extends State<VerifyEmail> {
                       showDialog(
                           context: context,
                           builder: (context) {
-                            return AlertDialog(
-                                content: const Text("A mail has been sent"),
-                                actions: [
-                                  ElevatedButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: const Text("OKay"))
-                                ]);
+                            return AlertDialog(content: const Text("A mail has been sent"), actions: [
+                              ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text("OKay"))
+                            ]);
                           });
                     });
                   },

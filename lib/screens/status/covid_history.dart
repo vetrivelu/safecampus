@@ -43,7 +43,12 @@ class CovidList extends StatelessWidget {
                 return ListView.builder(
                     itemCount: userController.user!.covidHistory?.length,
                     itemBuilder: (context, index) {
-                      return CovidTile(covidInfo: userController.user!.covidHistory![index]);
+                      return CovidTile(
+                        covidInfo: userController.user!.covidHistory![index],
+                        onTap: () {
+                          userController.removeCovidInfo(index);
+                        },
+                      );
                       // return Card(
                       //     child: Padding(
                       //   padding: const EdgeInsets.all(16.0),

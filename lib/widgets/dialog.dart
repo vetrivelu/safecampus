@@ -3,7 +3,6 @@ import 'package:safecampus/models/response.dart';
 
 showFutureDialog(
     {required BuildContext context, required Future<dynamic> future, required void Function() onSuccess, required void Function() onFailure}) {
-  print("I am in future dialog");
   showDialog(
       context: context,
       builder: (context) {

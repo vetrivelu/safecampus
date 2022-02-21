@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:safecampus/controllers/auth_controller.dart';
+
 import 'package:safecampus/controllers/profile_controller.dart';
+import 'package:safecampus/models/user.dart';
 
 import 'package:safecampus/screens/auth/login.dart';
 import 'package:safecampus/screens/auth/verify_email.dart';
@@ -21,16 +23,23 @@ class AuthRouter extends StatelessWidget {
           User user = snapshot.data!;
 
           if (user.emailVerified) {
-            return GetBuilder<UserController>(
-                init: userController,
-                builder: (context) {
-                  if (userController.user == null) {
+            return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+                stream: users.doc(auth.uid).snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.active && snapshot.hasData) {
+                    if (snapshot.data!.exists) {
+                      userController.user = UserModel.fromJson(snapshot.data!.data()!);
+                      if (userController.user != null) {
+                        return const Home();
+                      } else {
+                        return const ProfileForm();
+                      }
+                    }
                     return const ProfileForm();
-                    // return Container(color: Colors.amber);
-                  } else {
-                    return const Home();
-                    // return Container(color: Colors.green);
                   }
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
                 });
           } else {
             return const VerifyEmail();

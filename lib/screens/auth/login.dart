@@ -28,20 +28,25 @@ class _LoginState extends State<Login> {
     super.initState();
   }
 
+  ColorFilter? filter;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
 
       // backgroundColor: Colors.redAccent.withOpacity(0.9),
-      body: Container(
-        decoration: const BoxDecoration(
-            image: DecorationImage(
-          image: AssetImage('assets/images/background.png'),
-          fit: BoxFit.fitWidth,
-          alignment: Alignment.center,
-        )),
-        child: SingleChildScrollView(
+      body: SingleChildScrollView(
+        child: Container(
+          decoration: const BoxDecoration(
+              image: DecorationImage(
+            // colorFilter: filter,
+            scale: 30,
+            image: AssetImage('assets/images/background.png'),
+
+            fit: BoxFit.fitWidth,
+            alignment: Alignment.center,
+          )),
           child: SizedBox(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
@@ -58,13 +63,10 @@ class _LoginState extends State<Login> {
                       children: [
                         Text(
                           "Safe Campus",
-                          style: getText(context)
-                              .headline6!
-                              .copyWith(color: Colors.black),
+                          style: getText(context).headline6!.copyWith(color: Colors.black),
                         ),
                         Padding(
-                          padding: const EdgeInsetsDirectional.fromSTEB(
-                              20, 10, 30, 20),
+                          padding: const EdgeInsetsDirectional.fromSTEB(20, 10, 30, 20),
                           child: Image.asset(
                             'assets/images/iukl_logo.png',
                             width: MediaQuery.of(context).size.width * 0.7,
@@ -75,16 +77,14 @@ class _LoginState extends State<Login> {
                       ],
                     ),
                     Padding(
-                      padding:
-                          const EdgeInsetsDirectional.fromSTEB(20, 20, 20, 20),
+                      padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 20, 20),
                       child: SizedBox(
                         width: MediaQuery.of(context).size.width * 0.7,
                         height: MediaQuery.of(context).size.height * 0.01,
                       ),
                     ),
                     Padding(
-                      padding:
-                          const EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
+                      padding: const EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -100,8 +100,7 @@ class _LoginState extends State<Login> {
                       ),
                     ),
                     Padding(
-                      padding:
-                          const EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
+                      padding: const EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -136,28 +135,23 @@ class _LoginState extends State<Login> {
                       ),
                     ),
                     Padding(
-                      padding:
-                          const EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
+                      padding: const EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
                       child: SizedBox(
                         height: MediaQuery.of(context).size.width * 0.12,
                         width: MediaQuery.of(context).size.width * 0.50,
                         child: ElevatedButton(
                           style: ButtonStyle(
                             elevation: MaterialStateProperty.all(10),
-                            shadowColor:
-                                MaterialStateProperty.all(Colors.redAccent),
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(RoundedRectangleBorder(
+                            shadowColor: MaterialStateProperty.all(Colors.redAccent),
+                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(18.0),
                             )),
                           ),
                           onPressed: () async {
                             String title = '', message = '';
-                            if (emailController.text.isEmpty ||
-                                passwordController.text.isEmpty) {
+                            if (emailController.text.isEmpty || passwordController.text.isEmpty) {
                               title = "Empty Email or Password";
-                              message =
-                                  "Please fill-out both email and password";
+                              message = "Please fill-out both email and password";
                               showDialog(
                                   context: context,
                                   builder: (context) {
@@ -192,11 +186,7 @@ class _LoginState extends State<Login> {
                                     );
                                   });
                             } else {
-                              await auth
-                                  .signInWithEmailAndPassword(
-                                      emailController.text,
-                                      passwordController.text)
-                                  .then((value) {
+                              await auth.signInWithEmailAndPassword(emailController.text, passwordController.text).then((value) {
                                 Navigator.of(context).popAndPushNamed('/');
                               }).catchError((error) {
                                 title = error.code ?? "Error";
@@ -219,9 +209,7 @@ class _LoginState extends State<Login> {
                               });
                             }
                           },
-                          child: const Text("Login",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 15)),
+                          child: const Text("Login", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
                         ),
                       ),
                     ),
@@ -263,8 +251,7 @@ class _LoginState extends State<Login> {
                     //   ),
                     // ),
                     Padding(
-                      padding:
-                          const EdgeInsetsDirectional.fromSTEB(0, 50, 0, 24),
+                      padding: const EdgeInsetsDirectional.fromSTEB(0, 50, 0, 24),
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.center,
