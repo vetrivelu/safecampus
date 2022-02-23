@@ -335,6 +335,35 @@ class ProfilePage extends StatelessWidget {
                               dense: true,
                             ),
                           ),
+                          const Divider(),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 20),
+                            child: ListTile(
+                              leading: const Icon(Icons.location_city_outlined),
+                              title: const Text(
+                                'Device ID',
+                                style: TextStyle(
+                                  fontFamily: 'Lexend Deca',
+                                  color: Colors.black,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              subtitle: Padding(
+                                padding: const EdgeInsets.only(top: 10),
+                                child: Text(
+                                  (userController.user!.device?.deviceId).toString(),
+                                  style: const TextStyle(
+                                    fontFamily: 'Lexend Deca',
+                                    color: Colors.black,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                ),
+                              ),
+                              dense: true,
+                            ),
+                          ),
                         ],
                       ),
                     ),

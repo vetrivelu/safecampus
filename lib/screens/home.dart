@@ -84,6 +84,7 @@ class _HomeState extends State<Home> {
     });
     _firebaseMessaging.setForegroundNotificationPresentationOptions(alert: true);
     _firebaseMessaging.subscribeToTopic('Announcement');
+    _firebaseMessaging.subscribeToTopic('Assessment');
 
     _getToken();
   }
@@ -222,7 +223,7 @@ class _HomeState extends State<Home> {
                             title: 'Assesments',
                             image: 'assets/images/profile.png',
                             onTap: () {
-                              Get.to(() => const AssessmentList());
+                              Get.to(() => AssessmentList());
                             },
                           ),
                         );

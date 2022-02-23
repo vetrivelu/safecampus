@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
-import 'package:safecampus/constants/themeconstants.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'controllers/auth_controller.dart';
@@ -17,21 +16,17 @@ import 'firebase.dart';
 import 'firebase_options.dart';
 import 'routers/auth_router.dart';
 import 'routers/routes.dart';
-import 'package:get_storage/get_storage.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
   print('Handling a background message ${message.messageId}');
   print(message.data);
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  await prefs.reload();
-  if (message.notification != null) {
-    prefs.setStringList(DateTime.now().toIso8601String().substring(0, 19) + ".000000",
-        [message.notification!.body.toString(), message.notification!.title.toString()]);
-    print(message.notification!.body);
-    print(message.notification!.title);
-    print("message");
-  }
+  SharedPreferences.getInstance()
+      .then((prefs) => prefs.setStringList(DateTime.now().toIso8601String().substring(0, 19) + ".000000",
+          [message.notification!.body.toString(), message.notification!.title.toString()]))
+      .catchError((error) { 
+    print(error);
+  });
 }
 
 AndroidNotificationChannel channel = AndroidNotificationChannel(

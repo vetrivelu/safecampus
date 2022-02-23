@@ -50,6 +50,7 @@ class UserController extends GetxController {
     users.doc(auth.uid).get().then((value) {
       if (value.exists) {
         user = UserModel.fromJson(value.data()!);
+        print(user!.device?.toJson());
         listenProfile();
         listenContacts();
         listenAssesments();
@@ -82,6 +83,7 @@ class UserController extends GetxController {
       });
     }
     return users.doc(auth.uid).update({"bioData": profile.toJson()}).then((value) {
+      print(user!.device?.toJson());
       updateProfileinRTDB();
       return response.Response.success("User Profile updated successfully");
     }).catchError((error) => response.Response.error(error.toString()));

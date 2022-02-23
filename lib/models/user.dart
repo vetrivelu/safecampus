@@ -46,10 +46,10 @@ class UserModel {
         "email": bioData.email,
         "uid": uid,
         "isGuest": false,
-        "deviceID": device != null ? device!.deviceId : null,
-        "groupID": device != null ? device!.groupId : null,
+        "deviceID": device?.deviceId,
+        "groupID": device?.groupId,
         "quarantine": quarantine != null ? quarantine!.location.place.toString() : null,
-        "isCovid": covidInfo != null ? covidInfo!.result : false,
+        "isCovid": latestCovid?.result ?? false,
         "fcm": fcm,
         "createdDate": createdDate != null ? createdDate!.toIso8601String() : null,
       };
@@ -62,6 +62,16 @@ class UserModel {
       returns.add(text.substring(0, i));
     }
     return returns;
+  }
+
+  CovidInfo? get latestCovid {
+    List<CovidInfo> history = covidHistory ?? [];
+    if (history.isEmpty) {
+      return null;
+    } else if (history.length == 1) {
+      return history.first;
+    }
+    covidHistory!.sort((a, b) => a.date!.compareTo(b.date!));
   }
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(

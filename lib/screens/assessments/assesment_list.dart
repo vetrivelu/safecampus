@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:safecampus/controllers/profile_controller.dart';
 import 'package:safecampus/screens/assessments/take_assesment.dart';
 
 class AssessmentList extends StatelessWidget {
-  const AssessmentList({Key? key}) : super(key: key);
-
+  AssessmentList({Key? key}) : super(key: key);
+  final DateFormat formatter = DateFormat.yMMMMd('en_US');
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -37,6 +38,7 @@ class AssessmentList extends StatelessWidget {
                               return Card(
                                 child: ListTile(
                                     title: Text(userController.pendingAssesmentList[index].title),
+                                    subtitle: Text('Created on : ' + formatter.format(userController.pendingAssesmentList[index].createdDate)),
                                     onTap: () {
                                       Get.to(() => TakeAssesment(
                                             assessment: userController.pendingAssesmentList[index],
@@ -51,7 +53,6 @@ class AssessmentList extends StatelessWidget {
                           return Card(
                               child: ListTile(
                             title: Text(userController.user!.assessments![index].title),
-                            subtitle: Text(userController.user!.assessments![index].createdDate.toString()),
                             onTap: () {
                               Get.to(() => TakeAssesment(
                                     assessment: userController.user!.assessments![index],
