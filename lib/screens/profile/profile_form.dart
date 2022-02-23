@@ -164,48 +164,36 @@ class _ProfileFormState extends State<ProfileForm> {
                   const Divider(),
                   CustomTextBox(
                       controller: TextEditingController(text: auth.currentUser!.email), hintText: 'Your Email', labelText: 'Email', enabled: false),
-                  Table(
-                    columnWidths: const {
-                      1: FlexColumnWidth(1.5),
-                      2: FlexColumnWidth(1),
-                    },
-                    children: [
-                      TableRow(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(right: 4),
-                            child: CustomDropDown<UserType>(
-                              selectedValue: controller.userType,
-                              labelText: "User Type",
-                              items: userTypeItems,
-                              onChanged: (value) {
-                                setState(() {
-                                  controller.userType = value ?? controller.userType;
-                                });
+                  Padding(
+                    padding: const EdgeInsets.only(right: 4),
+                    child: CustomDropDown<UserType>(
+                      selectedValue: controller.userType,
+                      labelText: "User Type",
+                      items: userTypeItems,
+                      onChanged: (value) {
+                        setState(() {
+                          controller.userType = value ?? controller.userType;
+                        });
+                      },
+                      hintText: '',
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 4),
+                    child: GetBuilder(
+                        init: dashboard,
+                        builder: (context) {
+                          return CustomDropDown<String?>(
+                              validator: (value) {
+                                return value != null ? null : "Please select a department";
                               },
-                              hintText: '',
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 4),
-                            child: GetBuilder(
-                                init: dashboard,
-                                builder: (context) {
-                                  return CustomDropDown<String?>(
-                                      validator: (value) {
-                                        return value != null ? null : "Please select a department";
-                                      },
-                                      selectedValue: controller.department,
-                                      items: departmentItems,
-                                      labelText: "Department",
-                                      onChanged: (value) {
-                                        controller.department = value ?? controller.department;
-                                      });
-                                }),
-                          ),
-                        ],
-                      ),
-                    ],
+                              selectedValue: controller.department,
+                              items: departmentItems,
+                              labelText: "Department",
+                              onChanged: (value) {
+                                controller.department = value ?? controller.department;
+                              });
+                        }),
                   ),
                   const Divider(),
                   CustomTextBox(controller: controller.name, hintText: 'Enter your Name', labelText: 'Name', keyboardType: TextInputType.name),
