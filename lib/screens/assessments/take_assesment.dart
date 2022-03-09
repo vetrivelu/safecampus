@@ -97,12 +97,25 @@ class _TakeAssesmentState extends State<TakeAssesment> {
   }
 }
 
-class WrittenQuestion extends StatelessWidget {
+class WrittenQuestion extends StatefulWidget {
   WrittenQuestion({Key? key, required this.question, required this.index, required this.canEdit}) : super(key: key);
   final Question question;
   final int index;
   final bool canEdit;
+
+  @override
+  State<WrittenQuestion> createState() => _WrittenQuestionState();
+}
+
+class _WrittenQuestionState extends State<WrittenQuestion> {
   final TextEditingController controller = TextEditingController();
+
+  @override
+  void initState() {
+    controller.text = widget.question.answer ?? '';
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -110,11 +123,11 @@ class WrittenQuestion extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text("Question ${index + 1} ${question.mandatory ? '*' : ''}", style: const TextStyle(fontWeight: FontWeight.bold)),
+          child: Text("Question ${widget.index + 1} ${widget.question.mandatory ? '*' : ''}", style: const TextStyle(fontWeight: FontWeight.bold)),
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text(question.question),
+          child: Text(widget.question.question),
         ),
         Padding(
           padding: const EdgeInsets.only(left: 20),
@@ -124,9 +137,9 @@ class WrittenQuestion extends StatelessWidget {
             hintText: "Enter your Answer here",
             labelText: "Answer",
             onChanged: (String changeText) {
-              question.answer = changeText;
+              widget.question.answer = changeText;
             },
-            enabled: canEdit,
+            enabled: widget.canEdit,
           ),
         ),
         const Divider(thickness: 5),

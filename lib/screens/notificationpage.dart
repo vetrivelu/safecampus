@@ -22,6 +22,15 @@ class _NotificationPageState extends State<NotificationPage> {
     // print(keys);
   }
 
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
+    if (state == AppLifecycleState.resumed) {
+      // Shared preferences
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.reload();
+      keys.addAll(prefs.getKeys());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +44,7 @@ class _NotificationPageState extends State<NotificationPage> {
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.hasData) {
               SharedPreferences prefs = snapshot.data;
-
+              prefs.reload();
               keys = prefs.getKeys();
               for (var key in keys) {
                 if (key == 'Value') {

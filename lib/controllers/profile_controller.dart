@@ -50,7 +50,7 @@ class UserController extends GetxController {
     users.doc(auth.uid).get().then((value) {
       if (value.exists) {
         user = UserModel.fromJson(value.data()!);
-        print(user!.device?.toJson());
+
         listenProfile();
         listenContacts();
         listenAssesments();
@@ -64,6 +64,11 @@ class UserController extends GetxController {
     users.doc(auth.uid).snapshots().listen((snapshot) {
       if (snapshot.exists) {
         user = UserModel.fromJson(snapshot.data()!);
+        if (user!.quarantine != null) {
+          if (DateTime.now().isAfter(user!.quarantine!.endDate)) {
+            users.doc(user!.uid).update({"quarantine": null});
+          }
+        }
       } else {
         user = null;
       }
@@ -72,7 +77,7 @@ class UserController extends GetxController {
   }
 
   void createUser(UserModel user) {
-    users.doc(user.uid).set(user.toJson()).then((value) => updateProfileinRTDB()).catchError((error) => null);
+    users.doc(user.uid).set(user.toJson()).then((value) => null).catchError((error) => null);
   }
 
   Future updateUser(UserFormController controller) async {
@@ -84,7 +89,7 @@ class UserController extends GetxController {
     }
     return users.doc(auth.uid).update({"bioData": profile.toJson()}).then((value) {
       print(user!.device?.toJson());
-      updateProfileinRTDB();
+
       return response.Response.success("User Profile updated successfully");
     }).catchError((error) => response.Response.error(error.toString()));
   }
@@ -94,29 +99,13 @@ class UserController extends GetxController {
     history.add(covidInfo);
     return await users
         .doc(auth.uid)
-        .update({"covidHistory": history.map((e) => e.toJson()).toList()})
-        .then((value) => response.Response.success("Covid Information added"))
-        .onError((error, stackTrace) => response.Response.error(error.toString()));
-  }
-
-  Future<response.Response> removeCovidInfo(int index) async {
-    var history = user?.covidHistory ?? [];
-    history.removeAt(index);
-    return await users
-        .doc(auth.uid)
-        .update({"covidHistory": history.map((e) => e.toJson()).toList()})
+        .update({"covidHistory": history.map((e) => e.toJson()).toList(), "covidInfo": user?.latestCovid})
         .then((value) => response.Response.success("Covid Information added"))
         .onError((error, stackTrace) => response.Response.error(error.toString()));
   }
 
   updateToken() {
-    firebaseMessaging.getToken().then((value) => users.doc(auth.uid!).update({"fcm": value}).then((value) => updateProfileinRTDB()));
-  }
-
-  updateProfileinRTDB() {
-    if (user != null) {
-      databaseRef.child('users').child(auth.uid!).set(user!.toRTDBJson());
-    }
+    firebaseMessaging.getToken().then((value) => users.doc(auth.uid!).update({"fcm": value}).then((value) => null));
   }
 
   listenContacts() {
@@ -128,6 +117,7 @@ class UserController extends GetxController {
   listenAssesments() {
     Assessment.getAssesments().listen((snapshots) {
       allAssesments = snapshots.docs.map((e) => Assessment.fromJson(e.data())).toList();
+
       update();
     });
   }

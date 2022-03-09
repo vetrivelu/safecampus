@@ -22,7 +22,7 @@ class AuthRouter extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.active && snapshot.hasData) {
           User user = snapshot.data!;
 
-          if (user.emailVerified) {
+          if (true) {
             return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
                 stream: users.doc(auth.uid).snapshots(),
                 builder: (context, snapshot) {

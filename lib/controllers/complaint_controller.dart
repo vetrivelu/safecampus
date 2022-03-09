@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 
 class ComplaintController extends GetxController {
   File? _file;
+  List<File> files = [];
   TextEditingController title = TextEditingController();
   TextEditingController description = TextEditingController();
 
@@ -12,6 +13,7 @@ class ComplaintController extends GetxController {
     _file = null;
     title.clear();
     description.clear();
+    files = [];
     update();
   }
 

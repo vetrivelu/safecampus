@@ -61,18 +61,6 @@ class _HomeState extends State<Home> {
       }
     });
 
-    FirebaseMessaging.onBackgroundMessage((message) async {
-      if (message.notification != null) {
-        var preferences = await prefs;
-        preferences.setStringList(DateTime.now().toIso8601String().substring(0, 19) + ".000000",
-            [message.notification!.body.toString(), message.notification!.title.toString()]);
-        print(message.notification!.body);
-        print(message.notification!.title);
-        print("message");
-      }
-      return;
-    });
-
     FirebaseMessaging.onMessageOpenedApp.listen((message) async {
       if (message.notification != null) {
         var preferences = await prefs;
@@ -157,7 +145,7 @@ class _HomeState extends State<Home> {
                 init: dashboard,
                 builder: (context) {
                   return CarouselSlider(
-                    options: CarouselOptions(height: 220, autoPlay: true, aspectRatio: 4 / 3),
+                    options: CarouselOptions(height: 220, autoPlay: true, aspectRatio: 4 / 3, autoPlayInterval: const Duration(seconds: 10)),
                     items: dashboard.carouselItems.map((element) => CustomNetworkImage(url: element)).toList(),
                   );
                 }),
@@ -178,7 +166,7 @@ class _HomeState extends State<Home> {
                 title: 'History',
                 image: 'assets/images/ContactHistory.png',
                 onTap: () {
-                  Get.to(() => const ContactHistoryDetails());
+                  Get.to(() => ContactHistoryDetails());
                 },
               ),
               Tile(

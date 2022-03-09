@@ -95,7 +95,7 @@ class UserModel {
         "isStaff": isStaff,
         "device": device != null ? device!.toJson() : null,
         // "quarantine": quarantine != null ? quarantine!.toJson() : null,
-        "covidInfo": covidInfo != null ? covidInfo!.toJson() : null,
+        "covidInfo": latestCovid?.toJson(),
         "contactHistory": contactHistory != null ? List<dynamic>.from(contactHistory!.map((x) => x.toJson())) : null,
         "covidHistory": covidHistory != null ? List<dynamic>.from(covidHistory!.map((x) => x.toJson())) : null,
         "fcm": fcm,

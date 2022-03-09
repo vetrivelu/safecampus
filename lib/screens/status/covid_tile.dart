@@ -9,11 +9,9 @@ class CovidTile extends StatelessWidget {
   const CovidTile({
     Key? key,
     required this.covidInfo,
-    this.onTap,
   }) : super(key: key);
 
   final CovidInfo covidInfo;
-  final void Function()? onTap;
 
   @override
   Widget build(BuildContext context) {

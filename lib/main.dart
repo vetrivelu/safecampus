@@ -18,15 +18,10 @@ import 'routers/auth_router.dart';
 import 'routers/routes.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp();
-  print('Handling a background message ${message.messageId}');
-  print(message.data);
-  SharedPreferences.getInstance()
-      .then((prefs) => prefs.setStringList(DateTime.now().toIso8601String().substring(0, 19) + ".000000",
-          [message.notification!.body.toString(), message.notification!.title.toString()]))
-      .catchError((error) { 
-    print(error);
-  });
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.reload();
+  await prefs.setStringList(
+      DateTime.now().toIso8601String().substring(0, 19) + ".000000", [message.notification!.body.toString(), message.notification!.title.toString()]);
 }
 
 AndroidNotificationChannel channel = AndroidNotificationChannel(
@@ -36,19 +31,26 @@ AndroidNotificationChannel channel = AndroidNotificationChannel(
     importance: Importance.max,
     playSound: true,
     sound: const RawResourceAndroidNotificationSound('notification'),
-    vibrationPattern: Int64List.fromList([0, 1000, 2000, 3000]));
+    vibrationPattern: Int64List.fromList([0, 1000, 1500, 1000]));
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-
 final Future<SharedPreferences> prefs = SharedPreferences.getInstance();
-
 const initializationSettings = InitializationSettings(android: AndroidInitializationSettings('@mipmap/ic_launcher'));
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  // FirebaseAuth.instance.useAuthEmulator('172.20.10.13', 9099);
+  // FirebaseFunctions.instance.useFunctionsEmulator('172.20.10.13', 5001);
+  // FirebaseFirestore.instance.settings = const Settings(
+  //   host: '172.20.10.13:8080',
+  //   sslEnabled: false,
+  //   persistenceEnabled: false,
+  // );
+
   // SharedPreferences.setMockInitialValues({'key': "Value"});
   var preferences = await prefs;
 

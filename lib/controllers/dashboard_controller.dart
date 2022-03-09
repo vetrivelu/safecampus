@@ -9,6 +9,10 @@ class Dashboard extends GetxController {
   List<Department> departments = [];
   Map<String, dynamic> locations = {};
 
+  String getLocation({required String gateway}) {
+    return locations[gateway]?['name'] ?? gateway;
+  }
+
   String? getName(String? id) {
     if (id == null) {
       return null;
@@ -30,7 +34,7 @@ class Dashboard extends GetxController {
   }
 
   loadLocations() {
-    firestore.collection('dashboard').doc('Location').snapshots().listen((snapshot) {
+    firestore.collection('dashboard').doc('location').snapshots().listen((snapshot) {
       if (snapshot.exists) {
         locations = snapshot.data()!;
       }

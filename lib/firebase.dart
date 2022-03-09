@@ -18,3 +18,12 @@ uploadFile(File file, String name) {
     return snapshot.ref.getDownloadURL();
   });
 }
+
+Future<List<String>> uploadFiles(List<File> files) async {
+  List<String> url = [];
+  for (var file in files) {
+    var res = await uploadFile(file, DateTime.now().microsecondsSinceEpoch.toString());
+    url.add(res);
+  }
+  return url;
+}

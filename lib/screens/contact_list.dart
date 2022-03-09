@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:safecampus/controllers/profile_controller.dart';
 
+import '../controllers/dashboard_controller.dart';
+
 class ContactHistoryDetails extends StatelessWidget {
-  const ContactHistoryDetails({Key? key}) : super(key: key);
+  ContactHistoryDetails({Key? key}) : super(key: key);
+
+  final format = DateFormat.yMMMMd('en_US');
 
   @override
   Widget build(BuildContext context) {
@@ -49,9 +54,11 @@ class ContactHistoryDetails extends StatelessWidget {
                                           data: 'Device ID : ${userController.user!.contactHistory![index].deviceID}',
                                         ),
                                         TextForDetails(
-                                          data: 'Date & Time : ${DateTime.now()}',
+                                          data: 'Date & Time :${format.format(userController.user!.contactHistory![index].lastContact!)}',
                                         ),
-                                        TextForDetails(data: 'Gateway: ${userController.user!.contactHistory![index].gateWay}'),
+                                        TextForDetails(
+                                            data:
+                                                'Location: ${dashboard.getLocation(gateway: userController.user!.contactHistory![index].gateWay ?? '')}'),
                                       ],
                                     )),
                               ),

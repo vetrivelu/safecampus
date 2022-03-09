@@ -165,7 +165,7 @@ class _ProfileFormState extends State<ProfileForm> {
                   CustomTextBox(
                       controller: TextEditingController(text: auth.currentUser!.email), hintText: 'Your Email', labelText: 'Email', enabled: false),
                   Padding(
-                    padding: const EdgeInsets.only(right: 4),
+                    padding: const EdgeInsets.only(bottom: 8),
                     child: CustomDropDown<UserType>(
                       selectedValue: controller.userType,
                       labelText: "User Type",
@@ -179,7 +179,7 @@ class _ProfileFormState extends State<ProfileForm> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 4),
+                    padding: const EdgeInsets.only(bottom: 8),
                     child: GetBuilder(
                         init: dashboard,
                         builder: (context) {
@@ -195,7 +195,7 @@ class _ProfileFormState extends State<ProfileForm> {
                               });
                         }),
                   ),
-                  const Divider(),
+                  // const Divider(),
                   CustomTextBox(controller: controller.name, hintText: 'Enter your Name', labelText: 'Name', keyboardType: TextInputType.name),
                   CustomTextBox(controller: controller.id, labelText: "ID", hintText: "Enter ID", keyboardType: TextInputType.text),
                   CustomTextBox(

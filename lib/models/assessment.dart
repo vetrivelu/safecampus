@@ -57,6 +57,7 @@ class Assessment {
     bool value = true;
     for (Question question in questions) {
       if (!question.isGoodToSubmit) {
+        print(question.toJson());
         value = false;
         return value;
       }
@@ -152,7 +153,19 @@ class Question {
         "choices": choices != null ? List<dynamic>.from(choices!.map((x) => x)) : null,
       };
 
-  bool get isAnswered => answer == null ? false : true;
+  bool get isAnswered {
+    switch (type) {
+      case QuestionType.mcq:
+        break;
+      case QuestionType.boolean:
+        if (questionBool != null) return true;
+        break;
+      case QuestionType.typed:
+        if (answer != null) return true;
+        break;
+    }
+    return false;
+  }
 
   bool get isGoodToSubmit {
     if (!mandatory) {

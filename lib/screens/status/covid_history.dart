@@ -45,9 +45,6 @@ class CovidList extends StatelessWidget {
                     itemBuilder: (context, index) {
                       return CovidTile(
                         covidInfo: userController.user!.covidHistory![index],
-                        onTap: () {
-                          userController.removeCovidInfo(index);
-                        },
                       );
                       // return Card(
                       //     child: Padding(

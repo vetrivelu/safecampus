@@ -9,6 +9,7 @@ import 'package:safecampus/widgets/custom_textbox.dart';
 import 'package:fluttericon/modern_pictograms_icons.dart';
 import 'package:badges/badges.dart';
 import 'package:safecampus/widgets/dialog.dart';
+import 'package:safecampus/widgets/image_adders.dart';
 
 class WhistleBlower extends StatelessWidget {
   WhistleBlower({Key? key}) : super(key: key);
@@ -22,10 +23,19 @@ class WhistleBlower extends StatelessWidget {
     }
   }
 
+  Future chooseFiles() async {
+    List<XFile>? xfiles = await ImagePicker().pickMultiImage();
+    if (xfiles != null && xfiles.isNotEmpty) {
+      controller.files = xfiles.map((e) => File(e.path)).toList();
+      controller.update();
+    }
+  }
+
   Future captureFile() async {
     var xfile = await ImagePicker().pickImage(source: ImageSource.camera);
     if (xfile != null) {
-      controller.file = File(xfile.path);
+      controller.files.add(File(xfile.path));
+      controller.update();
     }
   }
 
@@ -47,7 +57,7 @@ class WhistleBlower extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           ListTile(onTap: captureFile, leading: const Icon(Icons.camera), title: const Text("Take a photo")),
-                          ListTile(onTap: chooseFile, leading: const Icon(Icons.photo_album), title: const Text("Pick Images from Gallery")),
+                          ListTile(onTap: chooseFiles, leading: const Icon(Icons.photo_album), title: const Text("Pick Images from Gallery")),
                         ],
                       );
                     });
@@ -61,7 +71,8 @@ class WhistleBlower extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: FloatingActionButton(
               onPressed: () {
-                var future = Complaint.createComplaint(description: controller.description.text, title: controller.title.text, file: controller.file);
+                var future =
+                    Complaint.createComplaint(description: controller.description.text, title: controller.title.text, files: controller.files);
                 showFutureDialog(
                     context: context,
                     future: future,
@@ -101,26 +112,38 @@ class WhistleBlower extends StatelessWidget {
                     maxLines: 6,
                   ),
                   const Divider(),
-                  controller.file == null
-                      ? Container()
-                      : Expanded(
-                          child: Align(
-                            alignment: Alignment.topCenter,
-                            child: Badge(
-                                badgeContent: GestureDetector(
-                                  onTap: () {
-                                    controller.file = null;
-                                  },
-                                  child: const Icon(Icons.cancel, color: Colors.white),
-                                ),
-                                child: Image.file(controller.file!)),
-                          ),
-                          // child: FileImage(
-                          // path: controller.file!.path,
-                          // onTap: () {
-                          //   controller.file = null;
-                          // },
-                        ),
+
+                  Wrap(
+                    children: controller.files
+                        .map((e) => FileImage(
+                              path: e.path,
+                              onTap: () {
+                                controller.files.removeWhere((element) => element.path == e.path);
+                                controller.update();
+                              },
+                            ))
+                        .toList(),
+                  ),
+                  // controller.file == null
+                  //     ? Container()
+                  //     : Expanded(
+                  //         child: Align(
+                  //           alignment: Alignment.topCenter,
+                  //           child: Badge(
+                  //               badgeContent: GestureDetector(
+                  //                 onTap: () {
+                  //                   controller.file = null;
+                  //                 },
+                  //                 child: const Icon(Icons.cancel, color: Colors.white),
+                  //               ),
+                  //               child: Image.file(controller.file!)),
+                  //         ),
+                  // child: FileImage(
+                  // path: controller.file!.path,
+                  // onTap: () {
+                  //   controller.file = null;
+                  // },
+                  // ),
                 ],
               ),
             );
@@ -143,6 +166,7 @@ class FileImage extends StatelessWidget {
     return Padding(
       padding: const EdgeInsetsDirectional.all(12),
       child: Container(
+        width: MediaQuery.of(context).size.width * 0.25,
         decoration: BoxDecoration(
           color: const Color(0xFFEEEEEE),
           borderRadius: BorderRadius.circular(20),
