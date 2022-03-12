@@ -11,6 +11,7 @@ class Announcement {
     this.content,
     // required this.documentId,
     this.createdDate,
+    required this.urls,
   });
 
   String? attachementUrl;
@@ -19,16 +20,7 @@ class Announcement {
   String? content;
   // late String documentId;
   DateTime? createdDate;
-
-  static createAnnouncement({
-    String? attachementUrl,
-    required String title,
-    required String description,
-    String? content,
-  }) {
-    announcements
-        .add({"attachementUrl": attachementUrl, "title": title, "description": description, "content": content, "createdDate": DateTime.now()});
-  }
+  List<dynamic> urls;
 
   factory Announcement.fromJson(Map<String, dynamic> json) => Announcement(
         attachementUrl: json["attachementUrl"],
@@ -37,6 +29,7 @@ class Announcement {
         content: json["content"],
         // documentId: json["documentID"],
         createdDate: json["createdDate"].toDate(),
+        urls: json["urls"] ?? [],
       );
   static Future<QuerySnapshot<Map<String, dynamic>>> getAnnouncement(DocumentSnapshot? announcmentSnapshot) {
     if (announcmentSnapshot != null) {
@@ -44,6 +37,10 @@ class Announcement {
     } else {
       return announcements.limit(15).orderBy("createdDate", descending: true).get();
     }
+  }
+
+  static Future<QuerySnapshot<Map<String, dynamic>>> getAllAnnouncement() {
+    return announcements.orderBy("createdDate", descending: true).get();
   }
 
   Map<String, dynamic> toJson() => {

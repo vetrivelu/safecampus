@@ -8,6 +8,7 @@ import 'package:safecampus/models/complaint.dart';
 import 'package:safecampus/widgets/custom_textbox.dart';
 import 'package:fluttericon/modern_pictograms_icons.dart';
 import 'package:badges/badges.dart';
+import 'package:safecampus/widgets/custom_textform_field.dart';
 import 'package:safecampus/widgets/dialog.dart';
 import 'package:safecampus/widgets/image_adders.dart';
 
@@ -38,6 +39,8 @@ class WhistleBlower extends StatelessWidget {
       controller.update();
     }
   }
+
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -71,18 +74,20 @@ class WhistleBlower extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: FloatingActionButton(
               onPressed: () {
-                var future =
-                    Complaint.createComplaint(description: controller.description.text, title: controller.title.text, files: controller.files);
-                showFutureDialog(
-                    context: context,
-                    future: future,
-                    onFailure: () {
-                      Navigator.of(context).pop();
-                    },
-                    onSuccess: () {
-                      controller.clear();
-                      Navigator.of(context).pop();
-                    });
+                if (_formKey.currentState!.validate()) {
+                  var future =
+                      Complaint.createComplaint(description: controller.description.text, title: controller.title.text, files: controller.files);
+                  showFutureDialog(
+                      context: context,
+                      future: future,
+                      onFailure: () {
+                        Navigator.of(context).pop();
+                      },
+                      onSuccess: () {
+                        controller.clear();
+                        Navigator.of(context).pop();
+                      });
+                }
               },
               child: const Icon(Icons.upload),
               heroTag: '_',
@@ -96,55 +101,76 @@ class WhistleBlower extends StatelessWidget {
           builder: (_) {
             return Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Icon(
-                    ModernPictograms.bullhorn,
-                    size: 100,
-                  ),
-                  const Divider(),
-                  CustomTextBox(controller: controller.title, labelText: "Title", hintText: "Enter title"),
-                  CustomTextBox(
-                    controller: controller.description,
-                    labelText: "Description",
-                    hintText: "Enter description",
-                    maxLines: 6,
-                  ),
-                  const Divider(),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      ModernPictograms.bullhorn,
+                      size: 100,
+                    ),
+                    const Divider(),
+                    CustomTextFormField(
+                      controller: controller.title,
+                      labelText: "Title",
+                      hintText: "Enter title",
+                      validator: (String? p1) {
+                        var text = p1 ?? '';
+                        if (text.isEmpty) {
+                          return 'This is a required field';
+                        }
+                        return null;
+                      },
+                    ),
+                    CustomTextFormField(
+                      controller: controller.description,
+                      labelText: "Description",
+                      hintText: "Enter description",
+                      maxlines: 6,
+                      validator: (String? p1) {
+                        var text = p1 ?? '';
+                        if (text.isEmpty) {
+                          return 'This is a required field';
+                        }
+                        return null;
+                      },
+                    ),
+                    const Divider(),
 
-                  Wrap(
-                    children: controller.files
-                        .map((e) => FileImage(
-                              path: e.path,
-                              onTap: () {
-                                controller.files.removeWhere((element) => element.path == e.path);
-                                controller.update();
-                              },
-                            ))
-                        .toList(),
-                  ),
-                  // controller.file == null
-                  //     ? Container()
-                  //     : Expanded(
-                  //         child: Align(
-                  //           alignment: Alignment.topCenter,
-                  //           child: Badge(
-                  //               badgeContent: GestureDetector(
-                  //                 onTap: () {
-                  //                   controller.file = null;
-                  //                 },
-                  //                 child: const Icon(Icons.cancel, color: Colors.white),
-                  //               ),
-                  //               child: Image.file(controller.file!)),
-                  //         ),
-                  // child: FileImage(
-                  // path: controller.file!.path,
-                  // onTap: () {
-                  //   controller.file = null;
-                  // },
-                  // ),
-                ],
+                    Wrap(
+                      children: controller.files
+                          .map((e) => FileImage(
+                                path: e.path,
+                                onTap: () {
+                                  controller.files.removeWhere((element) => element.path == e.path);
+                                  controller.update();
+                                },
+                              ))
+                          .toList(),
+                    ),
+                    // controller.file == null
+                    //     ? Container()
+                    //     : Expanded(
+                    //         child: Align(
+                    //           alignment: Alignment.topCenter,
+                    //           child: Badge(
+                    //               badgeContent: GestureDetector(
+                    //                 onTap: () {
+                    //                   controller.file = null;
+                    //                 },
+                    //                 child: const Icon(Icons.cancel, color: Colors.white),
+                    //               ),
+                    //               child: Image.file(controller.file!)),
+                    //         ),
+                    // child: FileImage(
+                    // path: controller.file!.path,
+                    // onTap: () {
+                    //   controller.file = null;
+                    // },
+                    // ),
+                  ],
+                ),
               ),
             );
           }),

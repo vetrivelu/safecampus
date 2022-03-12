@@ -87,7 +87,7 @@ class UserController extends GetxController {
         return await snapshot.ref.getDownloadURL();
       });
     }
-    return users.doc(auth.uid).update({"bioData": profile.toJson()}).then((value) {
+    return users.doc(auth.uid).update({"bioData": profile.toJson(), "search": profile.searchString}).then((value) {
       print(user!.device?.toJson());
 
       return response.Response.success("User Profile updated successfully");
@@ -95,13 +95,16 @@ class UserController extends GetxController {
   }
 
   Future<response.Response> addCovidInfo(CovidInfo covidInfo) async {
-    var history = user?.covidHistory ?? [];
-    history.add(covidInfo);
-    return await users
-        .doc(auth.uid)
-        .update({"covidHistory": history.map((e) => e.toJson()).toList(), "covidInfo": user?.latestCovid})
-        .then((value) => response.Response.success("Covid Information added"))
-        .onError((error, stackTrace) => response.Response.error(error.toString()));
+    user!.covidHistory = user!.covidHistory ?? [];
+    user!.covidHistory!.add(covidInfo);
+    user!.covidHistory!.sort((a, b) => a.date!.compareTo(b.date!));
+    return await users.doc(user!.uid).update({
+      "covidHistory": user!.covidHistory!.map((e) => e.toJson()).toList(),
+      "covidInfo": user!.covidHistory?.last.toJson(),
+    }).then((value) {
+      update();
+      return response.Response.success("Covid Information added");
+    }).onError((error, stackTrace) => response.Response.error(error.toString()));
   }
 
   updateToken() {

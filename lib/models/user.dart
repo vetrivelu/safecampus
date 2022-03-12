@@ -100,7 +100,7 @@ class UserModel {
         "covidHistory": covidHistory != null ? List<dynamic>.from(covidHistory!.map((x) => x.toJson())) : null,
         "fcm": fcm,
         "createdDate": createdDate,
-        "search": searchString,
+        "search": bioData.searchString,
       };
 }
 

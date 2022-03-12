@@ -28,25 +28,29 @@ class AssessmentList extends StatelessWidget {
               builder: (_) {
                 return TabBarView(
                   children: [
-                    userController.pendingAssesmentList.isEmpty
-                        ? const Center(
-                            child: Text("You are all caught up. No Pending Assesments"),
-                          )
-                        : ListView.builder(
-                            itemCount: userController.pendingAssesmentList.length,
-                            itemBuilder: (context, index) {
-                              return Card(
-                                child: ListTile(
-                                    title: Text(userController.pendingAssesmentList[index].title),
-                                    subtitle: Text('Created on : ' + formatter.format(userController.pendingAssesmentList[index].createdDate)),
-                                    onTap: () {
-                                      Get.to(() => TakeAssesment(
-                                            assessment: userController.pendingAssesmentList[index],
-                                            canEdit: true,
-                                          ));
-                                    }),
-                              );
-                            }),
+                    RefreshIndicator(
+                        child: userController.pendingAssesmentList.isEmpty
+                            ? const Center(
+                                child: Text("You are all caught up. No Pending Assesments"),
+                              )
+                            : ListView.builder(
+                                itemCount: userController.pendingAssesmentList.length,
+                                itemBuilder: (context, index) {
+                                  return Card(
+                                    child: ListTile(
+                                        title: Text(userController.pendingAssesmentList[index].title),
+                                        subtitle: Text('Created on : ' + formatter.format(userController.pendingAssesmentList[index].createdDate)),
+                                        onTap: () {
+                                          Get.to(() => TakeAssesment(
+                                                assessment: userController.pendingAssesmentList[index],
+                                                canEdit: true,
+                                              ));
+                                        }),
+                                  );
+                                }),
+                        onRefresh: () {
+                          return userController.loadAssesments();
+                        }),
                     ListView.builder(
                         itemCount: userController.user!.assessments?.length ?? 0,
                         itemBuilder: (context, index) {

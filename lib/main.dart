@@ -39,7 +39,7 @@ const initializationSettings = InitializationSettings(android: AndroidInitializa
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  SharedPreferences.setMockInitialValues({});
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );

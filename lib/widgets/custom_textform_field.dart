@@ -13,6 +13,7 @@ class CustomTextFormField extends StatelessWidget {
     this.suffixIcon,
     this.validator,
     this.keyboardType,
+    this.maxlines,
   }) : super(key: key);
 
   final String? labelText;
@@ -22,9 +23,12 @@ class CustomTextFormField extends StatelessWidget {
   final Widget? suffixIcon;
   final String? Function(String?)? validator;
 
+  final int? maxlines;
+
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      maxLines: maxlines,
       controller: controller,
       obscureText: obscureText,
       validator: validator,

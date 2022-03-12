@@ -18,6 +18,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 
 import '../main.dart';
 import 'announcementpage.dart';
+import 'announcements_list.dart';
 import 'assessments/assesment_list.dart';
 import 'contact_list.dart';
 import 'notificationpage.dart';
@@ -189,7 +190,7 @@ class _HomeState extends State<Home> {
                 title: 'Bulletin',
                 image: 'assets/images/announcement.png',
                 onTap: () {
-                  Get.to(() => const AnnouncementWidget());
+                  Get.to(() => const AnnouncementList());
                 },
               ),
               Tile(

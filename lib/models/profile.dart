@@ -49,6 +49,24 @@ class Profile {
         countryCode: json["countryCode"] ?? '',
       );
 
+  List<String> get searchString {
+    List<String> list = [];
+    List<String> splits = name.split(' ').toList();
+    splits.forEach((element) {
+      list.addAll(makeSearchstring(element));
+    });
+    return list;
+  }
+
+  List<String> makeSearchstring(String string) {
+    List<String> list = [];
+    for (int i = 1; i < string.length; i++) {
+      list.add(string.substring(0, i).toLowerCase());
+    }
+    list.add(string.toLowerCase());
+    return list;
+  }
+
   Map<String, dynamic> toJson() => {
         "id": id,
         "email": email,

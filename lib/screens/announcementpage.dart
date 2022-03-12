@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:photo_view/photo_view_gallery.dart';
 import 'package:safecampus/models/announcements.dart';
+import 'package:photo_view/photo_view.dart';
 // import 'package:url_launcher/url_launcher.dart';
 
 class AnnouncementWidget extends StatefulWidget {
@@ -85,8 +88,16 @@ class _AnnouncementWidgetState extends State<AnnouncementWidget> {
                   physics: const BouncingScrollPhysics(),
                   itemCount: items.length,
                   itemBuilder: (context, index) {
-                    return CustomCard(
-                      announcement: items[index],
+                    return ListTile(
+                      leading: const CircleAvatar(
+                        child: Icon(Icons.person),
+                      ),
+                      title: Text(items[index].title),
+                      subtitle: Text(
+                        items[index].createdDate!.toString().substring(0, 10),
+                        style: TextStyle(color: Colors.black.withOpacity(0.6)),
+                      ),
+                      trailing: items[index].urls.isNotEmpty ? Image.network(items[index].urls.first) : Container(),
                     );
                   },
                 ),
@@ -226,38 +237,71 @@ class CustomCard extends StatelessWidget {
               announcement.createdDate!.toString().substring(0, 10),
               style: TextStyle(color: Colors.black.withOpacity(0.6)),
             ),
+            trailing: announcement.urls.isNotEmpty ? Image.network(announcement.urls.first) : Container(),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: Text(
-              '${announcement.content}',
-              style: TextStyle(color: Colors.black.withOpacity(0.6)),
-            ),
+          Text(
+            '${announcement.content}',
+            style: TextStyle(color: Colors.black.withOpacity(0.6)),
           ),
-          // Image.network("https://www.shriramgi.com/news-events/wp-content/uploads/2020/10/SGI-corona-blog-image.png"),
-          GestureDetector(
-              onTap: () async {
-                // var url ="${announcement.attachementUrl}";
-                // await launch(url,enableDomStorage: true);
-                // print(url);
-              },
-              child: announcement.attachementUrl == null ? Container() : Image.network(announcement.attachementUrl!)),
-          // ButtonBar(
-          //   alignment: MainAxisAlignment.start,
-          //   children: [
-          //     ElevatedButton(
-          //
-          //       onPressed:  () async {
-          //         var url ="${announcement.attachementUrl}";
-          //         await launch(Uri.encodeFull(url),enableDomStorage: true);
-          //         print(url);
-          //       },
-          //       child: const Text('Download'),
-          //     ),
-          //
-          //   ],
-          // ),
+          announcement.urls.isNotEmpty
+              ?
+              // Image.network("https://www.shriramgi.com/news-events/wp-content/uploads/2020/10/SGI-corona-blog-image.png"),
+              TextButton(
+                  onPressed: () {
+                    Get.to(() => MultiImageViewer(urls: announcement.urls.map((e) => e.toString()).toList()));
+                  },
+                  child: const Text("VIEW ALL ATTACHMENTS"))
+              : Container(),
         ],
+      ),
+    );
+  }
+}
+
+class MultiImageViewer extends StatelessWidget {
+  const MultiImageViewer({Key? key, required this.urls}) : super(key: key);
+
+  final List<String> urls;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      child: SafeArea(
+        child: Stack(
+          children: [
+            PhotoViewGallery.builder(
+              scrollPhysics: const BouncingScrollPhysics(),
+              builder: (BuildContext context, int index) {
+                return PhotoViewGalleryPageOptions(
+                  imageProvider: NetworkImage(urls[index]),
+                  initialScale: PhotoViewComputedScale.contained * 0.8,
+                  heroAttributes: PhotoViewHeroAttributes(tag: index),
+                );
+              },
+              itemCount: urls.length,
+              loadingBuilder: (context, event) => Center(
+                child: SizedBox(
+                  width: 20.0,
+                  height: 20.0,
+                  child: CircularProgressIndicator(
+                    value: event == null ? 0 : event.cumulativeBytesLoaded / (event.expectedTotalBytes as int),
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: IconButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  icon: const Icon(
+                    Icons.arrow_back,
+                    color: Colors.white,
+                  )),
+            )
+          ],
+        ),
       ),
     );
   }
