@@ -127,7 +127,7 @@ class _CovidFormState extends State<CovidForm> {
                                 context: context,
                                 initialDate: _date,
                                 firstDate: _date.subtract(const Duration(days: 365)),
-                                lastDate: _date.add(const Duration(days: 365))) ??
+                                lastDate: DateTime.now()) ??
                             _date;
                         setState(() {});
                       },
@@ -180,7 +180,7 @@ class _CovidFormState extends State<CovidForm> {
                                 context: context,
                                 initialDate: _vaccinatedOn,
                                 firstDate: _vaccinatedOn.subtract(const Duration(days: 365)),
-                                lastDate: _vaccinatedOn.add(const Duration(days: 365))) ??
+                                lastDate: DateTime.now()) ??
                             _date;
                         setState(() {});
                       },
