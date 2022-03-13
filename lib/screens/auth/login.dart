@@ -107,6 +107,7 @@ class _LoginState extends State<Login> {
                         children: [
                           Expanded(
                             child: CustomTextFormField(
+                              maxlines: 1,
                               controller: passwordController,
                               hintText: 'Enter your password',
                               labelText: 'Password',
