@@ -43,15 +43,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  // FirebaseAuth.instance.useAuthEmulator('172.20.10.13', 9099);
-  // FirebaseFunctions.instance.useFunctionsEmulator('172.20.10.13', 5001);
-  // FirebaseFirestore.instance.settings = const Settings(
-  //   host: '172.20.10.13:8080',
-  //   sslEnabled: false,
-  //   persistenceEnabled: false,
-  // );
 
-  // SharedPreferences.setMockInitialValues({'key': "Value"});
   var preferences = await prefs;
 
   Get.put(PreferencesController(preferences));

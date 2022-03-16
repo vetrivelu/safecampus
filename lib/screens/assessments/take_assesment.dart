@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:safecampus/constants/themeconstants.dart';
 import 'package:safecampus/controllers/auth_controller.dart';
+import 'package:safecampus/controllers/profile_controller.dart';
 import 'package:safecampus/models/assessment.dart';
 import 'package:safecampus/widgets/custom_textbox.dart';
 
@@ -42,6 +43,7 @@ class _TakeAssesmentState extends State<TakeAssesment> {
                                     actions: [
                                       TextButton(
                                           onPressed: () {
+                                            userController.loadAssesments();
                                             Navigator.of(context).pop();
                                             Navigator.of(context).pop();
                                           },

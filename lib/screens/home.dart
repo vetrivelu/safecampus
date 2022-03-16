@@ -10,6 +10,7 @@ import 'package:safecampus/controllers/auth_controller.dart';
 import 'package:safecampus/controllers/dashboard_controller.dart';
 
 import 'package:safecampus/controllers/profile_controller.dart';
+import 'package:safecampus/screens/notiifcationlist.dart';
 import 'package:safecampus/screens/profile/profile.dart';
 
 import 'package:safecampus/widgets/network_image.dart';
@@ -42,6 +43,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
+    userController.loadAssesments();
     _firebaseMessaging.getInitialMessage().then((message) {
       if (message != null) {
         final routeFromMessage = message.data["route"];
@@ -125,7 +127,7 @@ class _HomeState extends State<Home> {
               ),
               color: const Color(0xFFED392D),
               onPressed: () {
-                Get.to(() => const NotificationPage());
+                Get.to(() => const NotificationList());
               },
             ),
           )
