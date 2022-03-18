@@ -1,22 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:safecampus/controllers/profile_controller.dart';
 
 class NotificationList extends StatelessWidget {
   const NotificationList({Key? key}) : super(key: key);
 
   Widget getTile(Map<String, dynamic> json, void Function()? callback) {
-    if (json["document"] != null) {
-      return Card(
-        child: ExpansionTile(
-          title: Text(json["document"]["title"]),
-          trailing: GestureDetector(onTap: callback, child: const Icon(Icons.delete)),
-        ),
-      );
-    }
     return Card(
       child: ListTile(
-        title: Text(json["document"]["title"]),
+        leading: Text(DateFormat.MMMd().format(json["time"].toDate())),
+        title: Text(json["title"]),
+        subtitle: Text(json["description"]),
+        trailing: IconButton(onPressed: callback, icon: const Icon(Icons.delete)),
       ),
     );
   }

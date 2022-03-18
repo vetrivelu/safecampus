@@ -44,6 +44,7 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     userController.loadAssesments();
+
     _firebaseMessaging.getInitialMessage().then((message) {
       if (message != null) {
         final routeFromMessage = message.data["route"];

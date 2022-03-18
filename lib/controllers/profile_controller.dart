@@ -163,6 +163,7 @@ class UserController extends GetxController {
   Future<void> loadAssesments() async {
     user!.assessments =
         await users.doc(auth.uid).collection("Assessments").get().then((value) => value.docs.map((e) => Assessment.fromJson(e.data())).toList());
+    update();
   }
 }
 
