@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -9,10 +11,25 @@ class NotificationList extends StatelessWidget {
   Widget getTile(Map<String, dynamic> json, void Function()? callback) {
     return Card(
       child: ListTile(
-        leading: Text(DateFormat.MMMd().format(json["time"].toDate())),
-        title: Text(json["title"]),
+        leading: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: const [
+            Icon(Icons.notifications),
+          ],
+        ),
+        title: Text(
+          json["title"],
+          style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16),
+        ),
         subtitle: Text(json["description"]),
-        trailing: IconButton(onPressed: callback, icon: const Icon(Icons.delete)),
+        trailing: Column(
+          children: [
+            GestureDetector(child: const Icon(Icons.delete), onTap: callback),
+            const Padding(padding: EdgeInsets.symmetric(vertical: 6)),
+            Text(DateFormat.MMMd().format(json["time"].toDate()))
+          ],
+        ),
       ),
     );
   }
@@ -24,9 +41,13 @@ class NotificationList extends StatelessWidget {
           title: const Text("Notification List"),
         ),
         body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-          stream: users.doc(userController.user!.uid).collection('Notification').snapshots(),
+          stream: users
+              .doc(userController.user!.uid)
+              .collection('Notification')
+              .snapshots(),
           builder: (BuildContext context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.active || snapshot.hasData) {
+            if (snapshot.connectionState == ConnectionState.active ||
+                snapshot.hasData) {
               print(snapshot.data!.docs.length);
               return ListView.builder(
                   itemCount: snapshot.data!.docs.length,
