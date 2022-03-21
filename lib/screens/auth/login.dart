@@ -91,6 +91,7 @@ class _LoginState extends State<Login> {
                         children: [
                           Expanded(
                             child: CustomTextFormField(
+                              maxlines: 1,
                               hintText: 'Enter your email',
                               labelText: 'Email',
                               controller: emailController,
@@ -168,7 +169,7 @@ class _LoginState extends State<Login> {
                                       ],
                                     );
                                   });
-                            } else if (!emailController.text.isEmail) {
+                            } else if (!emailController.text.removeAllWhitespace.isEmail) {
                               title = "Invalid Email";
                               message = "Please enter a valid email";
                               showDialog(
@@ -187,7 +188,7 @@ class _LoginState extends State<Login> {
                                     );
                                   });
                             } else {
-                              await auth.signInWithEmailAndPassword(emailController.text, passwordController.text).then((value) {
+                              await auth.signInWithEmailAndPassword(emailController.text.removeAllWhitespace, passwordController.text).then((value) {
                                 Navigator.of(context).popAndPushNamed('/');
                               }).catchError((error) {
                                 title = error.code ?? "Error";

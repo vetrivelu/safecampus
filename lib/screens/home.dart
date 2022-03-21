@@ -10,6 +10,7 @@ import 'package:safecampus/controllers/auth_controller.dart';
 import 'package:safecampus/controllers/dashboard_controller.dart';
 
 import 'package:safecampus/controllers/profile_controller.dart';
+import 'package:safecampus/screens/notiifcationlist.dart';
 import 'package:safecampus/screens/profile/profile.dart';
 
 import 'package:safecampus/widgets/network_image.dart';
@@ -51,19 +52,11 @@ class _HomeState extends State<Home> {
 
     FirebaseMessaging.onMessage.listen((message) async {
       if (message.notification != null) {
-        flutterLocalNotificationsPlugin.show(
-            1,
-            message.notification!.title,
-            message.notification!.body,
-            NotificationDetails(
-                android: AndroidNotificationDetails(channel.id, channel.name,
-                    channelDescription: channel.description)));
+        flutterLocalNotificationsPlugin.show(1, message.notification!.title, message.notification!.body,
+            NotificationDetails(android: AndroidNotificationDetails(channel.id, channel.name, channelDescription: channel.description)));
         var preferences = await prefs;
-        preferences.setStringList(
-            DateTime.now().toIso8601String().substring(0, 19) + ".000000", [
-          message.notification!.body.toString(),
-          message.notification!.title.toString()
-        ]);
+        preferences.setStringList(DateTime.now().toIso8601String().substring(0, 19) + ".000000",
+            [message.notification!.body.toString(), message.notification!.title.toString()]);
         print(message.notification!.body);
         print(message.notification!.title);
         print("message");
@@ -73,17 +66,13 @@ class _HomeState extends State<Home> {
     FirebaseMessaging.onMessageOpenedApp.listen((message) async {
       if (message.notification != null) {
         var preferences = await prefs;
-        preferences.setStringList(DateTime.now().toIso8601String(), [
-          message.notification!.body.toString(),
-          message.notification!.title.toString()
-        ]);
+        preferences.setStringList(DateTime.now().toIso8601String(), [message.notification!.body.toString(), message.notification!.title.toString()]);
         // print(message.notification!.body);
         // print(message.notification!.title);
         // print("message");
       }
     });
-    _firebaseMessaging.setForegroundNotificationPresentationOptions(
-        alert: true);
+    _firebaseMessaging.setForegroundNotificationPresentationOptions(alert: true);
     _firebaseMessaging.subscribeToTopic('Announcement');
     _firebaseMessaging.subscribeToTopic('Assessment');
 
@@ -137,14 +126,13 @@ class _HomeState extends State<Home> {
               ),
               color: const Color(0xFFED392D),
               onPressed: () {
-                Get.to(() => const NotificationPage());
+                Get.to(() => const NotificationList());
               },
             ),
           )
         ],
         title: Padding(
-          padding:
-              const EdgeInsets.only(left: 48, right: 56, top: 48, bottom: 48),
+          padding: const EdgeInsets.only(left: 48, right: 56, top: 48, bottom: 48),
           child: Image.asset(
             'assets/images/iukl_logo.png',
             fit: BoxFit.fitHeight,
@@ -159,22 +147,13 @@ class _HomeState extends State<Home> {
                 init: dashboard,
                 builder: (context) {
                   return CarouselSlider(
-                    options: CarouselOptions(
-                        height: 220,
-                        autoPlay: true,
-                        aspectRatio: 4 / 3,
-                        autoPlayInterval: const Duration(seconds: 10)),
-                    items: dashboard.carouselItems
-                        .map((element) => CustomNetworkImage(url: element))
-                        .toList(),
+                    options: CarouselOptions(height: 220, autoPlay: true, aspectRatio: 4 / 3, autoPlayInterval: const Duration(seconds: 10)),
+                    items: dashboard.carouselItems.map((element) => CustomNetworkImage(url: element)).toList(),
                   );
                 }),
           ),
           const Divider(),
-          PaddedText("Menu",
-              style: getText(context)
-                  .subtitle1!
-                  .copyWith(fontWeight: FontWeight.bold)),
+          PaddedText("Menu", style: getText(context).subtitle1!.copyWith(fontWeight: FontWeight.bold)),
           Wrap(
             direction: Axis.horizontal,
             children: [
@@ -228,11 +207,8 @@ class _HomeState extends State<Home> {
                       init: userController,
                       builder: (context) {
                         return Badge(
-                          showBadge:
-                              userController.pendingAssesmentList.isNotEmpty,
-                          badgeContent: Text(userController
-                              .pendingAssesmentList.length
-                              .toString()),
+                          showBadge: userController.pendingAssesmentList.isNotEmpty,
+                          badgeContent: Text(userController.pendingAssesmentList.length.toString()),
                           child: Tile(
                             title: 'Assesments',
                             image: 'assets/images/profile.png',

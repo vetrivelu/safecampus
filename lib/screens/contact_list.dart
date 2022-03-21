@@ -20,11 +20,15 @@ class ContactHistoryDetails extends StatelessWidget {
       body: GetBuilder(
           init: userController,
           builder: (context) {
-            return Column(
-              children: <Widget>[
-                userController.user!.contactHistory == null
-                    ? const Expanded(child: Center(child: Text("No Contact History Found")))
-                    : Expanded(
+            return (userController.user!.contactHistory ?? []).isEmpty
+                ? const Center(
+                    child: Text(
+                    "No Contact History Found",
+                    style: TextStyle(color: Colors.black),
+                  ))
+                : Column(
+                    children: <Widget>[
+                      Expanded(
                         child: ListView.builder(
                           physics: const BouncingScrollPhysics(),
                           itemCount: userController.user!.contactHistory != null ? userController.user!.contactHistory!.length : 0,
@@ -66,8 +70,8 @@ class ContactHistoryDetails extends StatelessWidget {
                           },
                         ),
                       ),
-              ],
-            );
+                    ],
+                  );
           }),
     );
   }

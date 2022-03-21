@@ -51,20 +51,29 @@ class AssessmentList extends StatelessWidget {
                         onRefresh: () {
                           return userController.loadAssesments();
                         }),
-                    ListView.builder(
-                        itemCount: userController.user!.assessments?.length ?? 0,
-                        itemBuilder: (context, index) {
-                          return Card(
-                              child: ListTile(
-                            title: Text(userController.user!.assessments![index].title),
-                            onTap: () {
-                              Get.to(() => TakeAssesment(
-                                    assessment: userController.user!.assessments![index],
-                                    canEdit: false,
-                                  ));
-                            },
-                          ));
-                        }),
+                    RefreshIndicator(
+                      onRefresh: () {
+                        return userController.loadAssesments();
+                      },
+                      child: (userController.user!.assessments ?? []).isEmpty
+                          ? const Center(
+                              child: Text("You haven't completed any Assesments"),
+                            )
+                          : ListView.builder(
+                              itemCount: userController.user!.assessments?.length ?? 0,
+                              itemBuilder: (context, index) {
+                                return Card(
+                                    child: ListTile(
+                                  title: Text(userController.user!.assessments![index].title),
+                                  onTap: () {
+                                    Get.to(() => TakeAssesment(
+                                          assessment: userController.user!.assessments![index],
+                                          canEdit: false,
+                                        ));
+                                  },
+                                ));
+                              }),
+                    ),
                   ],
                 );
               })),

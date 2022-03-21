@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:safecampus/controllers/auth_controller.dart';
 import 'package:safecampus/widgets/custom_textbox.dart';
+import 'package:get/get.dart';
 
 class ForgotPassword extends StatefulWidget {
   const ForgotPassword({Key? key, this.email}) : super(key: key);
@@ -26,10 +27,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage('assets/images/upside down.png'),
-              fit: BoxFit.fill)),
+      decoration: const BoxDecoration(image: DecorationImage(image: AssetImage('assets/images/upside down.png'), fit: BoxFit.fill)),
       child: Padding(
         padding: MediaQuery.of(context).viewInsets,
         child: Column(
@@ -42,32 +40,26 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
-            CustomTextBox(
-                controller: emailController,
-                labelText: "Email",
-                hintText: "Enter email"),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: CustomTextBox(maxLines: 1, controller: emailController, labelText: "Email", hintText: "Enter email"),
+            ),
             ElevatedButton(
                 onPressed: () {
-                  var future = auth.resetPassword(email: emailController.text);
+                  var future = auth.resetPassword(email: emailController.text.removeAllWhitespace);
                   showDialog(
                       context: context,
                       builder: (context) {
                         return FutureBuilder(
                           future: future,
-                          builder:
-                              (BuildContext context, AsyncSnapshot snapshot) {
-                            if (snapshot.connectionState ==
-                                    ConnectionState.active ||
-                                snapshot.connectionState ==
-                                    ConnectionState.done) {
+                          builder: (BuildContext context, AsyncSnapshot snapshot) {
+                            if (snapshot.connectionState == ConnectionState.active || snapshot.connectionState == ConnectionState.done) {
                               var result = snapshot.data;
 
                               if (result == 'user-not-found') {
                                 return AlertDialog(
-                                  content: const Text(
-                                      "Entered email is not present in our system"),
-                                  title: const Text("Invalid Email-ID",
-                                      style: TextStyle(color: Colors.black)),
+                                  content: const Text("Entered email is not present in our system"),
+                                  title: const Text("Invalid Email-ID", style: TextStyle(color: Colors.black)),
                                   actions: [
                                     ElevatedButton(
                                         onPressed: () {
@@ -79,11 +71,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                               }
 
                               return AlertDialog(
-                                content: const Text(
-                                    "An email has been sent to the respective email. Kindly check your inbox"),
-                                title: const Text("Mail Sent",
-                                    style: TextStyle(color: Colors.black),
-                                    textAlign: TextAlign.justify),
+                                content: const Text("An email has been sent to the respective email. Kindly check your inbox"),
+                                title: const Text("Mail Sent", style: TextStyle(color: Colors.black), textAlign: TextAlign.justify),
                                 actions: [
                                   ElevatedButton(
                                       onPressed: () {
@@ -93,8 +82,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                 ],
                               );
                             } else {
-                              return const Center(
-                                  child: CircularProgressIndicator());
+                              return const Center(child: CircularProgressIndicator());
                             }
                           },
                         );

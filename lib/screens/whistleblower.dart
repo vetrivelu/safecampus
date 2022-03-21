@@ -111,30 +111,36 @@ class WhistleBlower extends StatelessWidget {
                       size: 100,
                     ),
                     const Divider(),
-                    CustomTextFormField(
-                      controller: controller.title,
-                      labelText: "Title",
-                      hintText: "Enter title",
-                      validator: (String? p1) {
-                        var text = p1 ?? '';
-                        if (text.isEmpty) {
-                          return 'This is a required field';
-                        }
-                        return null;
-                      },
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: CustomTextFormField(
+                        controller: controller.title,
+                        labelText: "Title",
+                        hintText: "Enter title",
+                        validator: (String? p1) {
+                          var text = p1 ?? '';
+                          if (text.isEmpty) {
+                            return 'This is a required field';
+                          }
+                          return null;
+                        },
+                      ),
                     ),
-                    CustomTextFormField(
-                      controller: controller.description,
-                      labelText: "Description",
-                      hintText: "Enter description",
-                      maxlines: 6,
-                      validator: (String? p1) {
-                        var text = p1 ?? '';
-                        if (text.isEmpty) {
-                          return 'This is a required field';
-                        }
-                        return null;
-                      },
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: CustomTextFormField(
+                        controller: controller.description,
+                        labelText: "Description",
+                        hintText: "Enter description",
+                        maxlines: 6,
+                        validator: (String? p1) {
+                          var text = p1 ?? '';
+                          if (text.isEmpty) {
+                            return 'This is a required field';
+                          }
+                          return null;
+                        },
+                      ),
                     ),
                     const Divider(),
 

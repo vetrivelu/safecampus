@@ -28,6 +28,7 @@ class CustomTextFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      autofocus: true,
       maxLines: maxlines,
       controller: controller,
       obscureText: obscureText,
@@ -35,15 +36,15 @@ class CustomTextFormField extends StatelessWidget {
       keyboardType: keyboardType,
       decoration: InputDecoration(
         suffixIcon: suffixIcon,
-        labelText: labelText,
+        // labelText: labelText,
         labelStyle: const TextStyle(
           fontFamily: 'Lexend Deca',
-          color: Colors.grey,
+          color: Colors.black,
           fontSize: 14,
           fontWeight: FontWeight.bold,
         ),
-        // hintText: hintText,
-        hintStyle: getText(context).bodyText1!.merge(const TextStyle(color: Color(0xFF040A10))),
+        hintText: hintText,
+        hintStyle: getText(context).bodyText1!.merge(const TextStyle(color: Colors.grey)),
         enabledBorder: OutlineInputBorder(
           borderSide: const BorderSide(
             color: Color(0xFFDBE2E7),

@@ -52,9 +52,18 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                     style: getText(context).headline5,
                   ),
                 ),
-                CustomTextBox(controller: emailController, labelText: "Email", hintText: "Enter email"),
-                CustomTextBox(controller: passwordController, labelText: "Password", hintText: "Enter password"),
-                CustomTextBox(controller: confirmPasswordController, labelText: "Confirm Password", hintText: "Re-Enter password"),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: CustomTextBox(controller: emailController, labelText: "Email", hintText: "Enter email"),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: CustomTextBox(controller: passwordController, labelText: "Password", hintText: "Enter password"),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: CustomTextBox(controller: confirmPasswordController, labelText: "Confirm Password", hintText: "Re-Enter password"),
+                ),
                 ElevatedButton(
                     onPressed: () async {
                       String title = '', message = '';
@@ -65,7 +74,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                         title = "Invalid Email";
                         message = "Please enter a valid email";
                       } else {
-                        await auth.createUserWithEmailAndPassword(emailController.text, passwordController.text).then((user) {
+                        await auth.createUserWithEmailAndPassword(emailController.text.removeAllWhitespace, passwordController.text).then((user) {
                           title = "Success";
                           message = "Please log in to continue";
                           if (user != null) {

@@ -9,26 +9,25 @@ class NotificationList extends StatelessWidget {
   const NotificationList({Key? key}) : super(key: key);
 
   Widget getTile(Map<String, dynamic> json, void Function()? callback) {
-    return Card(
-      child: ListTile(
-        leading: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: const [
-            Icon(Icons.notifications),
-          ],
-        ),
-        title: Text(
-          json["title"],
-          style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16),
-        ),
-        subtitle: Text(json["description"]),
-        trailing: Column(
-          children: [
-            GestureDetector(child: const Icon(Icons.delete), onTap: callback),
-            const Padding(padding: EdgeInsets.symmetric(vertical: 6)),
-            Text(DateFormat.MMMd().format(json["time"].toDate()))
-          ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 4),
+      child: Card(
+        child: ListTile(
+          leading: CircleAvatar(
+            child: Image.asset("assets/icon/icon.png"),
+          ),
+          title: Text(
+            json["title"],
+            style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16),
+          ),
+          subtitle: Text(json["description"]),
+          trailing: Column(
+            children: [
+              GestureDetector(child: const Icon(Icons.delete), onTap: callback),
+              const Padding(padding: EdgeInsets.symmetric(vertical: 6)),
+              Text(DateFormat.MMMd().format(json["time"].toDate()))
+            ],
+          ),
         ),
       ),
     );
@@ -41,13 +40,9 @@ class NotificationList extends StatelessWidget {
           title: const Text("Notification List"),
         ),
         body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-          stream: users
-              .doc(userController.user!.uid)
-              .collection('Notification')
-              .snapshots(),
+          stream: users.doc(userController.user!.uid).collection('Notification').snapshots(),
           builder: (BuildContext context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.active ||
-                snapshot.hasData) {
+            if (snapshot.connectionState == ConnectionState.active || snapshot.hasData) {
               print(snapshot.data!.docs.length);
               return ListView.builder(
                   itemCount: snapshot.data!.docs.length,
