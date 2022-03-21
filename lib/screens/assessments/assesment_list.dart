@@ -4,9 +4,22 @@ import 'package:intl/intl.dart';
 import 'package:safecampus/controllers/profile_controller.dart';
 import 'package:safecampus/screens/assessments/take_assesment.dart';
 
-class AssessmentList extends StatelessWidget {
+class AssessmentList extends StatefulWidget {
   AssessmentList({Key? key}) : super(key: key);
+
+  @override
+  State<AssessmentList> createState() => _AssessmentListState();
+}
+
+class _AssessmentListState extends State<AssessmentList> {
   final DateFormat formatter = DateFormat.yMMMMd('en_US');
+  @override
+  void initState() {
+    // TODO: implement initState
+    userController.loadAssesments();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(

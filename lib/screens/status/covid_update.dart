@@ -212,6 +212,21 @@ class _CovidFormState extends State<CovidForm> {
                         });
                   } else {
                     Navigator.of(context).pop();
+
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text("Report added successfully", style: TextStyle(color: Colors.black)),
+                            actions: [
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text("Okay"))
+                            ],
+                          );
+                        });
                   }
                 });
               },
