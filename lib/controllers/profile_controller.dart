@@ -76,7 +76,13 @@ class UserController extends GetxController {
     });
   }
 
-  void createUser(UserModel user) {
+  Future<void> createUser(UserFormController controller) async {
+    var user = UserModel(bioData: controller.profile, uid: auth.uid!);
+    if (controller.localFile != null) {
+      controller.profile.imageUrl = await storage.ref("profiles").child(auth.uid!).putFile(controller.localFile!).then((snapshot) async {
+        return await snapshot.ref.getDownloadURL();
+      });
+    }
     users.doc(user.uid).set(user.toJson()).then((value) => null).catchError((error) => null);
   }
 

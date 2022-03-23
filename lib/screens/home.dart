@@ -67,9 +67,17 @@ class _HomeState extends State<Home> {
       if (message.notification != null) {
         var preferences = await prefs;
         preferences.setStringList(DateTime.now().toIso8601String(), [message.notification!.body.toString(), message.notification!.title.toString()]);
-        // print(message.notification!.body);
-        // print(message.notification!.title);
-        // print("message");
+        print(message.notification!.body);
+        print(message.notification!.title);
+        print("message");
+
+        if (message.notification!.title == "Contact Registered") {
+          Get.to(() => ContactHistoryDetails());
+        } else if (message.notification!.title == "You have been quarantined") {
+          Get.to(() => QuarantinePage(user: userController.user!));
+        } else {
+          Get.to(() => const AnnouncementList());
+        }
       }
     });
     _firebaseMessaging.setForegroundNotificationPresentationOptions(alert: true);

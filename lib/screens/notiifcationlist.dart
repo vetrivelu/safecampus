@@ -2,8 +2,10 @@ import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:safecampus/controllers/profile_controller.dart';
+import 'package:safecampus/screens/home.dart';
 
 class NotificationList extends StatelessWidget {
   const NotificationList({Key? key}) : super(key: key);
@@ -13,6 +15,9 @@ class NotificationList extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 4),
       child: Card(
         child: ListTile(
+          onTap: () {
+            Get.to(() => Home());
+          },
           leading: CircleAvatar(
             child: Image.asset("assets/icon/icon.png"),
           ),
@@ -40,7 +45,7 @@ class NotificationList extends StatelessWidget {
           title: const Text("Notification List"),
         ),
         body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-          stream: users.doc(userController.user!.uid).collection('Notification').snapshots(),
+          stream: users.doc(userController.user!.uid).collection('Notification').orderBy('time', descending: true).snapshots(),
           builder: (BuildContext context, snapshot) {
             if (snapshot.connectionState == ConnectionState.active || snapshot.hasData) {
               print(snapshot.data!.docs.length);

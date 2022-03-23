@@ -122,7 +122,7 @@ class _ProfileFormState extends State<ProfileForm> {
                     Navigator.of(context).pop();
                   });
             } else {
-              userController.createUser(UserModel(bioData: controller.profile, uid: auth.uid!));
+              userController.createUser(controller);
             }
           }
         },
