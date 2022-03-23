@@ -44,18 +44,26 @@ class _AssessmentListState extends State<AssessmentList> {
                     RefreshIndicator(
                         child: userController.pendingAssesmentList.isEmpty
                             ? const Center(
-                                child: Text("You are all caught up. No Pending Assesments"),
+                                child: Text(
+                                    "You are all caught up. No Pending Assesments"),
                               )
                             : ListView.builder(
-                                itemCount: userController.pendingAssesmentList.length,
+                                itemCount:
+                                    userController.pendingAssesmentList.length,
                                 itemBuilder: (context, index) {
                                   return Card(
                                     child: ListTile(
-                                        title: Text(userController.pendingAssesmentList[index].title),
-                                        subtitle: Text('Created on : ' + formatter.format(userController.pendingAssesmentList[index].createdDate)),
+                                        title: Text(userController
+                                            .pendingAssesmentList[index].title),
+                                        subtitle: Text('Created on : ' +
+                                            formatter.format(userController
+                                                .pendingAssesmentList[index]
+                                                .createdDate)),
                                         onTap: () {
                                           Get.to(() => TakeAssesment(
-                                                assessment: userController.pendingAssesmentList[index],
+                                                assessment: userController
+                                                        .pendingAssesmentList[
+                                                    index],
                                                 canEdit: true,
                                               ));
                                         }),
@@ -70,17 +78,21 @@ class _AssessmentListState extends State<AssessmentList> {
                       },
                       child: (userController.user!.assessments ?? []).isEmpty
                           ? const Center(
-                              child: Text("You haven't completed any Assesments"),
+                              child:
+                                  Text("You haven't completed any Assesments"),
                             )
                           : ListView.builder(
-                              itemCount: userController.user!.assessments?.length ?? 0,
+                              itemCount:
+                                  userController.user!.assessments?.length ?? 0,
                               itemBuilder: (context, index) {
                                 return Card(
                                     child: ListTile(
-                                  title: Text(userController.user!.assessments![index].title),
+                                  title: Text(userController
+                                      .user!.assessments![index].title),
                                   onTap: () {
                                     Get.to(() => TakeAssesment(
-                                          assessment: userController.user!.assessments![index],
+                                          assessment: userController
+                                              .user!.assessments![index],
                                           canEdit: false,
                                         ));
                                   },

@@ -3,6 +3,7 @@ import 'package:safecampus/constants/themeconstants.dart';
 import 'package:safecampus/controllers/profile_controller.dart';
 import 'package:safecampus/models/user.dart';
 import 'package:intl/intl.dart';
+import 'package:safecampus/widgets/dialog.dart';
 
 class CovidForm extends StatefulWidget {
   const CovidForm({Key? key}) : super(key: key);
@@ -60,7 +61,8 @@ class _CovidFormState extends State<CovidForm> {
                   elevation: 5,
                   shadowColor: Colors.grey,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0, vertical: 4.0),
                     child: DropdownButtonHideUnderline(
                       child: DropdownButton<String>(
                         onChanged: (String? v) {
@@ -126,7 +128,8 @@ class _CovidFormState extends State<CovidForm> {
                         _date = await showDatePicker(
                                 context: context,
                                 initialDate: _date,
-                                firstDate: _date.subtract(const Duration(days: 365)),
+                                firstDate:
+                                    _date.subtract(const Duration(days: 365)),
                                 lastDate: DateTime.now()) ??
                             _date;
                         setState(() {});
@@ -173,13 +176,15 @@ class _CovidFormState extends State<CovidForm> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(format.format(_vaccinatedOn), style: getText(context).bodyText2),
+                  Text(format.format(_vaccinatedOn),
+                      style: getText(context).bodyText2),
                   TextButton(
                       onPressed: () async {
                         _vaccinatedOn = await showDatePicker(
                                 context: context,
                                 initialDate: _vaccinatedOn,
-                                firstDate: _vaccinatedOn.subtract(const Duration(days: 365)),
+                                firstDate: _vaccinatedOn
+                                    .subtract(const Duration(days: 365)),
                                 lastDate: DateTime.now()) ??
                             _date;
                         setState(() {});
@@ -195,39 +200,51 @@ class _CovidFormState extends State<CovidForm> {
           ElevatedButton(
               onPressed: () {
                 userController.addCovidInfo(covidInfo).then((response) {
-                  if (response.code == "error") {
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            title: const Text("Error"),
-                            actions: [
-                              TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const Text("Okay"))
-                            ],
-                          );
-                        });
-                  } else {
-                    Navigator.of(context).pop();
+                  // if (response.code == "error") {
+                  //   showDialog(
+                  //       context: context,
+                  //       builder: (context) {
+                  //         return AlertDialog(
+                  //           title: const Text("Error"),
+                  //           actions: [
+                  //             TextButton(
+                  //                 onPressed: () {
+                  //                   Navigator.of(context).pop();
+                  //                 },
+                  //                 child: const Text("Okay"))
+                  //           ],
+                  //         );
+                  //       });
+                  // } else {
+                  //   Navigator.of(context).pop();
 
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            title: const Text("Report added successfully", style: TextStyle(color: Colors.black)),
-                            actions: [
-                              TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const Text("Okay"))
-                            ],
-                          );
-                        });
-                  }
+                  //   showDialog(
+                  //       context: context,
+                  //       builder: (context) {
+                  //         return AlertDialog(
+                  //           title: const Text("Report added successfully", style: TextStyle(color: Colors.black)),
+                  //           actions: [
+                  //             TextButton(
+                  //                 onPressed:() {
+                  //                   Navigator.of(context).pop();
+                  //                 },
+                  //                 child: const Text("Okay"))
+                  //           ],
+                  //         );
+                  //       });
+
+                  // }
+
+                  showFutureDialog(
+                      context: context,
+                      future: userController.addCovidInfo(covidInfo),
+                      onSuccess: () {
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pop();
+                      },
+                      onFailure: () {
+                        Navigator.of(context).pop();
+                      });
                 });
               },
               child: const Text("Submit")),

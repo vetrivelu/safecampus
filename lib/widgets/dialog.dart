@@ -1,23 +1,52 @@
 import 'package:flutter/material.dart';
+import 'package:safecampus/constants/themeconstants.dart';
 import 'package:safecampus/models/response.dart';
 
 showFutureDialog(
-    {required BuildContext context, required Future<dynamic> future, required void Function() onSuccess, required void Function() onFailure}) {
+    {required BuildContext context,
+    required Future<dynamic> future,
+    required void Function() onSuccess,
+    required void Function() onFailure}) {
   showDialog(
       context: context,
       builder: (context) {
         return FutureBuilder(
             future: future,
             builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.active || snapshot.connectionState == ConnectionState.done) {
+              if (snapshot.connectionState == ConnectionState.active ||
+                  snapshot.connectionState == ConnectionState.done) {
                 var response = snapshot.data as Response;
+                var title = response.code;
                 return AlertDialog(
-                  title: Text(
-                    response.code,
-                    style: const TextStyle(color: Colors.black),
+                  backgroundColor: Colors.red[100],
+                  title: Column(
+                    children: [
+                      Image.asset(
+                        "assets/icon/iuicon2.png",
+                        fit: BoxFit.fill,
+                      ),
+                      Text(
+                        '$title!',
+                        style: const TextStyle(color: Colors.black),
+                      ),
+                    ],
                   ),
-                  content: Text(response.message),
-                  actions: [ElevatedButton(onPressed: response.code == "error" ? onFailure : onSuccess, child: const Text("Okay"))],
+                  content: Text(
+                    response.message,
+                    textAlign: TextAlign.center,
+                  ),
+                  actions: [
+                    Center(
+                      child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              primary: Colors.blue[800],
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(50))),
+                          onPressed:
+                              response.code == "error" ? onFailure : onSuccess,
+                          child: const Text("Continue")),
+                    )
+                  ],
                 );
               }
               return const Center(

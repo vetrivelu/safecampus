@@ -5,7 +5,8 @@ import 'package:safecampus/controllers/auth_controller.dart';
 import 'package:safecampus/models/response.dart';
 import '../firebase.dart';
 
-CollectionReference<Map<String, dynamic>> complaints = firestore.collection('Complaints');
+CollectionReference<Map<String, dynamic>> complaints =
+    firestore.collection('Complaints');
 
 class Complaint {
   Complaint({
@@ -65,7 +66,10 @@ class Complaint {
   //   }
   // }
 
-  static Future<Response> createComplaint({required String title, required String description, required List<File> files}) async {
+  static Future<Response> createComplaint(
+      {required String title,
+      required String description,
+      required List<File> files}) async {
     List<String> url = [];
     var date = DateTime.now();
     try {
@@ -75,9 +79,15 @@ class Complaint {
           print(url);
         }
       }
-      return Complaint(files: url, title: title, description: description, raisedBy: auth.uid.toString(), raisedDate: date)
+      return Complaint(
+              files: url,
+              title: title,
+              description: description,
+              raisedBy: auth.uid.toString(),
+              raisedDate: date)
           .add()
-          .then((value) => Response.success("Complaint successfully added"));
+          .then((value) => Response.success(
+              "Your Complaint has been submitted successfully"));
     } catch (error) {
       return Response.error(error.toString());
     }

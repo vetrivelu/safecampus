@@ -52,11 +52,19 @@ class _HomeState extends State<Home> {
 
     FirebaseMessaging.onMessage.listen((message) async {
       if (message.notification != null) {
-        flutterLocalNotificationsPlugin.show(1, message.notification!.title, message.notification!.body,
-            NotificationDetails(android: AndroidNotificationDetails(channel.id, channel.name, channelDescription: channel.description)));
+        flutterLocalNotificationsPlugin.show(
+            1,
+            message.notification!.title,
+            message.notification!.body,
+            NotificationDetails(
+                android: AndroidNotificationDetails(channel.id, channel.name,
+                    channelDescription: channel.description)));
         var preferences = await prefs;
-        preferences.setStringList(DateTime.now().toIso8601String().substring(0, 19) + ".000000",
-            [message.notification!.body.toString(), message.notification!.title.toString()]);
+        preferences.setStringList(
+            DateTime.now().toIso8601String().substring(0, 19) + ".000000", [
+          message.notification!.body.toString(),
+          message.notification!.title.toString()
+        ]);
         print(message.notification!.body);
         print(message.notification!.title);
         print("message");
@@ -66,7 +74,10 @@ class _HomeState extends State<Home> {
     FirebaseMessaging.onMessageOpenedApp.listen((message) async {
       if (message.notification != null) {
         var preferences = await prefs;
-        preferences.setStringList(DateTime.now().toIso8601String(), [message.notification!.body.toString(), message.notification!.title.toString()]);
+        preferences.setStringList(DateTime.now().toIso8601String(), [
+          message.notification!.body.toString(),
+          message.notification!.title.toString()
+        ]);
         print(message.notification!.body);
         print(message.notification!.title);
         print("message");
@@ -80,7 +91,8 @@ class _HomeState extends State<Home> {
         }
       }
     });
-    _firebaseMessaging.setForegroundNotificationPresentationOptions(alert: true);
+    _firebaseMessaging.setForegroundNotificationPresentationOptions(
+        alert: true);
     _firebaseMessaging.subscribeToTopic('Announcement');
     _firebaseMessaging.subscribeToTopic('Assessment');
 
@@ -98,22 +110,49 @@ class _HomeState extends State<Home> {
             showDialog<String>(
               context: context,
               builder: (BuildContext context) => AlertDialog(
-                title: const Text(
-                  'Logout',
-                  style: TextStyle(color: Colors.black),
+                backgroundColor: Colors.red[100],
+                title: Column(
+                  children: [
+                    Image.asset("assets/icon/iuicon2.png"),
+                    const Text(
+                      'Logout',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ],
                 ),
-                content: const Text('Are you sure you wish to logout?'),
+                content: const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text('Are you sure you wish to logout?'),
+                ),
                 actions: <Widget>[
-                  TextButton(
-                    onPressed: () => Navigator.pop(context, 'Cancel'),
-                    child: const Text('Cancel'),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      auth.signOut();
-                      Navigator.pop(context, 'OK');
-                    },
-                    child: const Text('OK'),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.red[800],
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50)),
+                          ),
+                          onPressed: () => Navigator.pop(context, 'Cancel'),
+                          child: const Text('No'),
+                        ),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.blue[800],
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50)),
+                          ),
+                          onPressed: () {
+                            auth.signOut();
+                            Navigator.pop(context, 'OK');
+                          },
+                          child: const Text('Yes'),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -140,7 +179,8 @@ class _HomeState extends State<Home> {
           )
         ],
         title: Padding(
-          padding: const EdgeInsets.only(left: 48, right: 56, top: 48, bottom: 48),
+          padding:
+              const EdgeInsets.only(left: 48, right: 56, top: 48, bottom: 48),
           child: Image.asset(
             'assets/images/iukl_logo.png',
             fit: BoxFit.fitHeight,
@@ -155,13 +195,22 @@ class _HomeState extends State<Home> {
                 init: dashboard,
                 builder: (context) {
                   return CarouselSlider(
-                    options: CarouselOptions(height: 220, autoPlay: true, aspectRatio: 4 / 3, autoPlayInterval: const Duration(seconds: 10)),
-                    items: dashboard.carouselItems.map((element) => CustomNetworkImage(url: element)).toList(),
+                    options: CarouselOptions(
+                        height: 220,
+                        autoPlay: true,
+                        aspectRatio: 4 / 3,
+                        autoPlayInterval: const Duration(seconds: 10)),
+                    items: dashboard.carouselItems
+                        .map((element) => CustomNetworkImage(url: element))
+                        .toList(),
                   );
                 }),
           ),
           const Divider(),
-          PaddedText("Menu", style: getText(context).subtitle1!.copyWith(fontWeight: FontWeight.bold)),
+          PaddedText("Menu",
+              style: getText(context)
+                  .subtitle1!
+                  .copyWith(fontWeight: FontWeight.bold)),
           Wrap(
             direction: Axis.horizontal,
             children: [
@@ -215,8 +264,11 @@ class _HomeState extends State<Home> {
                       init: userController,
                       builder: (context) {
                         return Badge(
-                          showBadge: userController.pendingAssesmentList.isNotEmpty,
-                          badgeContent: Text(userController.pendingAssesmentList.length.toString()),
+                          showBadge:
+                              userController.pendingAssesmentList.isNotEmpty,
+                          badgeContent: Text(userController
+                              .pendingAssesmentList.length
+                              .toString()),
                           child: Tile(
                             title: 'Assesments',
                             image: 'assets/images/profile.png',
