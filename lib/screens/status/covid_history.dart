@@ -19,7 +19,7 @@ class CovidList extends StatelessWidget {
           centerTitle: true,
           actions: [
             Padding(
-              padding: const EdgeInsets.all(12.0),
+              padding: const EdgeInsets.all(13.0),
               child: ElevatedButton(
                   style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(Colors.white)),

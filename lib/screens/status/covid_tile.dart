@@ -35,11 +35,13 @@ class CovidTile extends StatelessWidget {
                     child: Center(
                       child: Text(
                         covidInfo.result == false ? 'Negative' : 'Positive',
-                        style: TextStyle(fontWeight: FontWeight.bold, color: cardcolor),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: cardcolor),
                       ),
                     ),
                     decoration: BoxDecoration(
-                      color: covidInfo.result == false ? Colors.green : Colors.red,
+                      color:
+                          covidInfo.result == false ? Colors.green : Colors.red,
                       borderRadius: BorderRadius.circular(14),
                     ),
                   )
@@ -57,7 +59,8 @@ class CovidTile extends StatelessWidget {
               TableRow(
                 children: [
                   const Text("Vaccination Date"),
-                  Text(": ${covidInfo.vaccinated ? format.format(covidInfo.vaccinatedOn!) : "Not vaccinated"} "),
+                  Text(
+                      ": ${covidInfo.vaccinated ? format.format(covidInfo.vaccinatedOn!) : "Not vaccinated"} "),
                   Container()
                 ],
               ),
@@ -65,7 +68,7 @@ class CovidTile extends StatelessWidget {
           ),
         ),
         decoration: BoxDecoration(
-          color: Colors.grey,
+          color: Colors.grey[500],
           borderRadius: BorderRadius.circular(20),
         ),
       ),
