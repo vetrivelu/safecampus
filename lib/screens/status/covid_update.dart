@@ -169,36 +169,39 @@ class _CovidFormState extends State<CovidForm> {
               ],
             ),
           ),
-          ListTile(
-            title: const Text("Vaccination Date"),
-            subtitle: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(format.format(_vaccinatedOn),
-                      style: getText(context).bodyText2),
-                  _vaccinated == true
-                      ? TextButton(
-                          onPressed: () async {
-                            _vaccinatedOn = await showDatePicker(
-                                    context: context,
-                                    initialDate: _vaccinatedOn,
-                                    firstDate: _vaccinatedOn
-                                        .subtract(const Duration(days: 365)),
-                                    lastDate: DateTime.now()) ??
-                                _date;
-                            setState(() {});
-                          },
-                          child: Text(
-                            "Change Date",
-                            style: getText(context).bodyText1,
-                          ))
-                      : const Text(""),
-                ],
-              ),
-            ),
-          ),
+          _vaccinated == true
+              ? ListTile(
+                  title: const Text("Vaccination Date"),
+                  subtitle: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(format.format(_vaccinatedOn),
+                            style: getText(context).bodyText2),
+                        _vaccinated == true
+                            ? TextButton(
+                                onPressed: () async {
+                                  _vaccinatedOn = await showDatePicker(
+                                          context: context,
+                                          initialDate: _vaccinatedOn,
+                                          firstDate: _vaccinatedOn.subtract(
+                                              const Duration(days: 365)),
+                                          lastDate: DateTime.now()) ??
+                                      _date;
+                                  setState(() {});
+                                },
+                                child: Text(
+                                  "Change Date",
+                                  style: getText(context).bodyText1,
+                                ))
+                            : const Text(""),
+                      ],
+                    ),
+                  ),
+                )
+              : Text(''),
           ElevatedButton(
               onPressed: () {
                 if (_method != null && _vaccinated != null && _result != null) {

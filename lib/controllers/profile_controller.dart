@@ -22,6 +22,12 @@ class UserController extends GetxController {
 
   UserController(this.user);
 
+  @override
+  onInit() {
+    super.onInit();
+    listenProfile();
+  }
+
   get name => user?.bioData.name;
   get id => user?.bioData.id;
   get superId => user?.bioData.superId;
@@ -84,7 +90,7 @@ class UserController extends GetxController {
   Future<void> createUser(UserFormController controller) async {
     var user = UserModel(bioData: controller.profile, uid: auth.uid!);
     if (controller.localFile != null) {
-      controller.profile.imageUrl = await storage
+      user.bioData.imageUrl = await storage
           .ref("profiles")
           .child(auth.uid!)
           .putFile(controller.localFile!)

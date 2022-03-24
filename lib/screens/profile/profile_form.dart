@@ -105,6 +105,14 @@ class _ProfileFormState extends State<ProfileForm> {
 
   final _formKey = GlobalKey<FormState>();
 
+  String? requiredValidator(String? val) {
+    var text = val ?? '';
+    if (text.isEmpty) {
+      return "This is a required field";
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -184,6 +192,7 @@ class _ProfileFormState extends State<ProfileForm> {
                   ),
                   const Divider(),
                   CustomTextBox(
+                      validator: requiredValidator,
                       controller:
                           TextEditingController(text: auth.currentUser!.email),
                       hintText: 'Your Email',
@@ -225,16 +234,19 @@ class _ProfileFormState extends State<ProfileForm> {
                   ),
                   // const Divider(),
                   CustomTextBox(
+                      validator: requiredValidator,
                       controller: controller.name,
                       hintText: 'Enter your Name',
                       labelText: 'Name',
                       keyboardType: TextInputType.name),
                   CustomTextBox(
+                      validator: requiredValidator,
                       controller: controller.id,
                       labelText: "ID",
                       hintText: "Enter ID",
                       keyboardType: TextInputType.text),
                   CustomTextBox(
+                      validator: requiredValidator,
                       controller: controller.superId,
                       hintText: 'Enter your Passport or IC Number',
                       labelText: controller.userType == UserType.foreignStudent
@@ -249,6 +261,7 @@ class _ProfileFormState extends State<ProfileForm> {
                           Padding(
                             padding: const EdgeInsets.only(right: 4.0),
                             child: CustomTextBox(
+                                validator: requiredValidator,
                                 controller: controller.countryCode,
                                 labelText: "Code",
                                 hintText: "+60",
@@ -257,6 +270,7 @@ class _ProfileFormState extends State<ProfileForm> {
                           Padding(
                             padding: const EdgeInsets.only(left: 4.0),
                             child: CustomTextBox(
+                                validator: requiredValidator,
                                 controller: controller.phoneNumber,
                                 labelText: "Phone",
                                 hintText: "Enter Phone Number",
@@ -267,6 +281,7 @@ class _ProfileFormState extends State<ProfileForm> {
                     ],
                   ),
                   CustomTextBox(
+                    validator: requiredValidator,
                     controller: controller.permanentAddress,
                     hintText: 'Enter Permanent Address',
                     labelText: "Permanent Address",
@@ -274,6 +289,7 @@ class _ProfileFormState extends State<ProfileForm> {
                     maxLines: 4,
                   ),
                   CustomTextBox(
+                    validator: requiredValidator,
                     controller: controller.currentAddress,
                     hintText: 'Enter Current Address',
                     labelText: "Current Address",
