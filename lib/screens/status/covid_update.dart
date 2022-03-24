@@ -205,54 +205,17 @@ class _CovidFormState extends State<CovidForm> {
           ElevatedButton(
               onPressed: () {
                 if (_method != null && _vaccinated != null && _result != null) {
-                  userController.addCovidInfo(covidInfo).then((response) {
-                    // if (response.code == "error") {
-                    //   showDialog(
-                    //       context: context,
-                    //       builder: (context) {
-                    //         return AlertDialog(
-                    //           title: const Text("Error"),
-                    //           actions: [
-                    //             TextButton(
-                    //                 onPressed: () {
-                    //                   Navigator.of(context).pop();
-                    //                 },
-                    //                 child: const Text("Okay"))
-                    //           ],
-                    //         );
-                    //       });
-                    // } else {
-                    //   Navigator.of(context).pop();
-
-                    //   showDialog(
-                    //       context: context,
-                    //       builder: (context) {
-                    //         return AlertDialog(
-                    //           title: const Text("Report added successfully", style: TextStyle(color: Colors.black)),
-                    //           actions: [
-                    //             TextButton(
-                    //                 onPressed:() {
-                    //                   Navigator.of(context).pop();
-                    //                 },
-                    //                 child: const Text("Okay"))
-                    //           ],
-                    //         );
-                    //       });
-
-                    // }
-
-                    showFutureDialog(
-                        context: context,
-                        future: userController.addCovidInfo(covidInfo),
-                        onSuccess: () {
-                          Navigator.of(context).pop();
-                          Navigator.of(context).pop();
-                        },
-                        onFailure: () {
-                          Navigator.of(context).pop();
-                        });
-                  });
-                } else
+                  showFutureDialog(
+                      context: context,
+                      future: userController.addCovidInfo(covidInfo),
+                      onSuccess: () {
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pop();
+                      },
+                      onFailure: () {
+                        Navigator.of(context).pop();
+                      });
+                } else {
                   showDialog<String>(
                     context: context,
                     builder: (BuildContext context) => AlertDialog(
@@ -266,6 +229,7 @@ class _CovidFormState extends State<CovidForm> {
                       ],
                     ),
                   );
+                }
 
                 // Find the ScaffoldMessenger in the widget tree
                 // and use it to show a SnackBar.

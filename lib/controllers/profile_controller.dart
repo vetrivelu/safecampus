@@ -22,12 +22,6 @@ class UserController extends GetxController {
 
   UserController(this.user);
 
-  @override
-  onInit() {
-    super.onInit();
-    listenProfile();
-  }
-
   get name => user?.bioData.name;
   get id => user?.bioData.id;
   get superId => user?.bioData.superId;

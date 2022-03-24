@@ -13,8 +13,20 @@ import 'package:safecampus/screens/profile/profile_form.dart';
 const String url =
     'https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
+
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  @override
+  void initState() {
+    userController.listenProfile();
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
