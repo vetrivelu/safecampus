@@ -9,6 +9,7 @@ import 'package:safecampus/controllers/dashboard_controller.dart';
 import 'package:safecampus/controllers/profile_controller.dart';
 import 'package:safecampus/models/profile.dart';
 import 'package:safecampus/models/user.dart';
+import 'package:safecampus/routers/auth_router.dart';
 import 'package:safecampus/screens/profile/profile.dart';
 import 'package:safecampus/screens/status/covid_history.dart';
 import 'package:safecampus/widgets/custom_dropdown.dart';
@@ -30,7 +31,9 @@ class _ProfileFormState extends State<ProfileForm> {
     super.initState();
     if (userController.user != null) {
       controller = userController.formController;
-      dashboard.getName(controller.department) == null ? controller.department = null : doNothing();
+      dashboard.getName(controller.department) == null
+          ? controller.department = null
+          : doNothing();
       mode = FormMode.update;
     } else {
       controller = UserFormController.plain();
@@ -54,12 +57,18 @@ class _ProfileFormState extends State<ProfileForm> {
   List<DropdownMenuItem<UserType>>? get userTypeItems => UserType.values
       .map((e) => DropdownMenuItem(
           value: e,
-          child: Text(
-              e.toString().split('.').last.split(RegExp('(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])')).map((e) => e.capitalizeFirst!).join(" "))))
+          child: Text(e
+              .toString()
+              .split('.')
+              .last
+              .split(RegExp('(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])'))
+              .map((e) => e.capitalizeFirst!)
+              .join(" "))))
       .toList();
 
-  List<DropdownMenuItem<String?>>? get departmentItems =>
-      dashboard.departments.map((e) => DropdownMenuItem<String>(value: e.id, child: Text(e.name))).toList();
+  List<DropdownMenuItem<String?>>? get departmentItems => dashboard.departments
+      .map((e) => DropdownMenuItem<String>(value: e.id, child: Text(e.name)))
+      .toList();
 
   Future<File?> _cropImage(String path) async {
     File? croppedFile = await ImageCropper().cropImage(
@@ -100,7 +109,18 @@ class _ProfileFormState extends State<ProfileForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(userController.user != null ? "Edit Profile" : "Registration"),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            mode == FormMode.registration
+                ? auth
+                    .signOut()
+                    .then((value) => Get.offAll(() => const AuthRouter()))
+                : Navigator.of(context).pop();
+          },
+        ),
+        title:
+            Text(userController.user != null ? "Edit Profile" : "Registration"),
         centerTitle: true,
       ),
       //=====================================Floating Action Button Here..............
@@ -146,7 +166,8 @@ class _ProfileFormState extends State<ProfileForm> {
                       ),
                       TextButton(
                         onPressed: () async {
-                          var xfile = await ImagePicker().pickImage(source: ImageSource.gallery);
+                          var xfile = await ImagePicker()
+                              .pickImage(source: ImageSource.gallery);
                           if (xfile != null) {
                             controller.localFile = await _cropImage(xfile.path);
                           }
@@ -163,7 +184,11 @@ class _ProfileFormState extends State<ProfileForm> {
                   ),
                   const Divider(),
                   CustomTextBox(
-                      controller: TextEditingController(text: auth.currentUser!.email), hintText: 'Your Email', labelText: 'Email', enabled: false),
+                      controller:
+                          TextEditingController(text: auth.currentUser!.email),
+                      hintText: 'Your Email',
+                      labelText: 'Email',
+                      enabled: false),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8),
                     child: CustomDropDown<UserType>(
@@ -185,23 +210,36 @@ class _ProfileFormState extends State<ProfileForm> {
                         builder: (context) {
                           return CustomDropDown<String?>(
                               validator: (value) {
-                                return value != null ? null : "Please select a department";
+                                return value != null
+                                    ? null
+                                    : "Please select a department";
                               },
                               selectedValue: controller.department,
                               items: departmentItems,
                               labelText: "Department",
                               onChanged: (value) {
-                                controller.department = value ?? controller.department;
+                                controller.department =
+                                    value ?? controller.department;
                               });
                         }),
                   ),
                   // const Divider(),
-                  CustomTextBox(controller: controller.name, hintText: 'Enter your Name', labelText: 'Name', keyboardType: TextInputType.name),
-                  CustomTextBox(controller: controller.id, labelText: "ID", hintText: "Enter ID", keyboardType: TextInputType.text),
+                  CustomTextBox(
+                      controller: controller.name,
+                      hintText: 'Enter your Name',
+                      labelText: 'Name',
+                      keyboardType: TextInputType.name),
+                  CustomTextBox(
+                      controller: controller.id,
+                      labelText: "ID",
+                      hintText: "Enter ID",
+                      keyboardType: TextInputType.text),
                   CustomTextBox(
                       controller: controller.superId,
                       hintText: 'Enter your Passport or IC Number',
-                      labelText: controller.userType == UserType.foreignStudent ? 'Passport Number' : 'IC Number',
+                      labelText: controller.userType == UserType.foreignStudent
+                          ? 'Passport Number'
+                          : 'IC Number',
                       keyboardType: TextInputType.name),
                   Table(
                     columnWidths: const {1: FlexColumnWidth(2)},
@@ -211,7 +249,10 @@ class _ProfileFormState extends State<ProfileForm> {
                           Padding(
                             padding: const EdgeInsets.only(right: 4.0),
                             child: CustomTextBox(
-                                controller: controller.countryCode, labelText: "Code", hintText: "+60", keyboardType: TextInputType.phone),
+                                controller: controller.countryCode,
+                                labelText: "Code",
+                                hintText: "+60",
+                                keyboardType: TextInputType.phone),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(left: 4.0),

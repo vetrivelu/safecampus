@@ -6,7 +6,9 @@ import 'package:safecampus/models/assessment.dart';
 import 'package:safecampus/widgets/custom_textbox.dart';
 
 class TakeAssesment extends StatefulWidget {
-  const TakeAssesment({Key? key, required this.assessment, required this.canEdit}) : super(key: key);
+  const TakeAssesment(
+      {Key? key, required this.assessment, required this.canEdit})
+      : super(key: key);
   final Assessment assessment;
   final bool canEdit;
   @override
@@ -34,36 +36,66 @@ class _TakeAssesmentState extends State<TakeAssesment> {
                         return FutureBuilder<Map<String, dynamic>>(
                             future: future,
                             builder: (context, snapshot) {
-                              if (snapshot.connectionState == ConnectionState.done) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.done) {
                                 if (snapshot.hasData) {
                                   var object = snapshot.data;
                                   return AlertDialog(
-                                    content: Text(object!["message"]),
-                                    title: Text(object["code"], style: getText(context).headline5),
+                                    backgroundColor: Colors.red[100],
+                                    content: Text(
+                                      object!["message"],
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    title: Column(
+                                      children: [
+                                        Image.asset(
+                                          "assets/icon/iuicon2.png",
+                                          fit: BoxFit.fill,
+                                        ),
+                                        Text(object["code"],
+                                            style: getText(context).headline5),
+                                      ],
+                                    ),
                                     actions: [
-                                      TextButton(
-                                          onPressed: () {
-                                            userController.loadAssesments();
-                                            Navigator.of(context).pop();
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: const Text("Okay"))
+                                      Center(
+                                        child: ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              primary: Colors.blue[800],
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          50)),
+                                            ),
+                                            onPressed: () {
+                                              userController.loadAssesments();
+                                              Navigator.of(context).pop();
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: const Text("Continue")),
+                                      )
                                     ],
                                   );
                                 }
-                                return const Center(child: CircularProgressIndicator());
+                                return const Center(
+                                    child: CircularProgressIndicator());
                               }
-                              return const Center(child: CircularProgressIndicator());
+                              return const Center(
+                                  child: CircularProgressIndicator());
                             });
                       });
                 } else {
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Please answer all mandatory (*) questions")));
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content:
+                          Text("Please answer all mandatory (*) questions")));
                 }
               },
               child: const Text("Submit"),
             )
           : null,
-      appBar: AppBar(centerTitle: true, backgroundColor: Colors.red, title: Text(widget.assessment.title)),
+      appBar: AppBar(
+          centerTitle: true,
+          backgroundColor: Colors.red,
+          title: Text(widget.assessment.title)),
       body: Column(
         children: [
           const SizedBox(
@@ -100,7 +132,12 @@ class _TakeAssesmentState extends State<TakeAssesment> {
 }
 
 class WrittenQuestion extends StatefulWidget {
-  WrittenQuestion({Key? key, required this.question, required this.index, required this.canEdit}) : super(key: key);
+  WrittenQuestion(
+      {Key? key,
+      required this.question,
+      required this.index,
+      required this.canEdit})
+      : super(key: key);
   final Question question;
   final int index;
   final bool canEdit;
@@ -125,7 +162,9 @@ class _WrittenQuestionState extends State<WrittenQuestion> {
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text("Question ${widget.index + 1} ${widget.question.mandatory ? '*' : ''}", style: const TextStyle(fontWeight: FontWeight.bold)),
+          child: Text(
+              "Question ${widget.index + 1} ${widget.question.mandatory ? '*' : ''}",
+              style: const TextStyle(fontWeight: FontWeight.bold)),
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
@@ -151,7 +190,12 @@ class _WrittenQuestionState extends State<WrittenQuestion> {
 }
 
 class BooleanQuestion extends StatefulWidget {
-  const BooleanQuestion({Key? key, required this.question, required this.index, required this.canEdit}) : super(key: key);
+  const BooleanQuestion(
+      {Key? key,
+      required this.question,
+      required this.index,
+      required this.canEdit})
+      : super(key: key);
 
   final Question question;
   final int index;
@@ -173,7 +217,9 @@ class _BooleanQuestionState extends State<BooleanQuestion> {
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text("Question ${widget.index + 1} ${widget.question.mandatory ? '*' : ''}", style: const TextStyle(fontWeight: FontWeight.bold)),
+          child: Text(
+              "Question ${widget.index + 1} ${widget.question.mandatory ? '*' : ''}",
+              style: const TextStyle(fontWeight: FontWeight.bold)),
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),

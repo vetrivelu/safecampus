@@ -54,27 +54,41 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: CustomTextBox(controller: emailController, labelText: "Email", hintText: "Enter email"),
+                  child: CustomTextBox(
+                      controller: emailController,
+                      labelText: "Email",
+                      hintText: "Enter email"),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: CustomTextBox(controller: passwordController, labelText: "Password", hintText: "Enter password"),
+                  child: CustomTextBox(
+                      controller: passwordController,
+                      labelText: "Password",
+                      hintText: "Enter password"),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: CustomTextBox(controller: confirmPasswordController, labelText: "Confirm Password", hintText: "Re-Enter password"),
+                  child: CustomTextBox(
+                      controller: confirmPasswordController,
+                      labelText: "Confirm Password",
+                      hintText: "Re-Enter password"),
                 ),
                 ElevatedButton(
                     onPressed: () async {
                       String title = '', message = '';
-                      if (emailController.text.isEmpty || passwordController.text.isEmpty) {
+                      if (emailController.text.isEmpty ||
+                          passwordController.text.isEmpty) {
                         title = "Empty Email or Password";
                         message = "Please fill-out both email and password";
                       } else if (!emailController.text.isEmail) {
                         title = "Invalid Email";
                         message = "Please enter a valid email";
                       } else {
-                        await auth.createUserWithEmailAndPassword(emailController.text.removeAllWhitespace, passwordController.text).then((user) {
+                        await auth
+                            .createUserWithEmailAndPassword(
+                                emailController.text.removeAllWhitespace,
+                                passwordController.text)
+                            .then((user) {
                           title = "Success";
                           message = "Please log in to continue";
                           if (user != null) {
@@ -82,7 +96,8 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                           }
                           Navigator.of(context).popAndPushNamed('/sign-in');
                         }).catchError((error) {
-                          title = error.code ?? "Error";
+                          title =
+                              (error.code ?? "Error").toString().capitalize!;
                           message = error.message ?? "Unknown Error";
                         });
                       }
@@ -91,14 +106,32 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                           context: context,
                           builder: (context) {
                             return AlertDialog(
-                              title: Text(title),
+                              backgroundColor: Colors.red[100],
+                              title: Column(
+                                children: [
+                                  Image.asset(
+                                    "assets/icon/iuicon2.png",
+                                    fit: BoxFit.fill,
+                                  ),
+                                  Text(
+                                    title,
+                                    style: const TextStyle(color: Colors.black),
+                                  ),
+                                ],
+                              ),
                               content: Text(message),
                               actions: [
-                                ElevatedButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: const Text("Okay")),
+                                Center(
+                                  child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(50))),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text("Okay")),
+                                ),
                               ],
                             );
                           });

@@ -4,7 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../firebase.dart';
 
-Assessment assessmentFromJson(String str) => Assessment.fromJson(json.decode(str));
+Assessment assessmentFromJson(String str) =>
+    Assessment.fromJson(json.decode(str));
 
 class Assessment {
   Assessment({
@@ -22,11 +23,15 @@ class Assessment {
   String title;
 
   static Stream<QuerySnapshot<Map<String, dynamic>>> getAssesments() {
-    return firestore.collection("Assessments").orderBy("createdDate", descending: true).snapshots();
+    return firestore
+        .collection("Assessments")
+        .orderBy("createdDate", descending: true)
+        .snapshots();
   }
 
   factory Assessment.fromJson(Map<String, dynamic> json) => Assessment(
-        questions: List<Question>.from(json["questions"].map((x) => Question.fromJson(x))),
+        questions: List<Question>.from(
+            json["questions"].map((x) => Question.fromJson(x))),
         id: json["id"],
         createdDate: json["createdDate"].toDate(),
         title: json["title"] ?? '',
@@ -72,17 +77,34 @@ class Assessment {
   Future<Map<String, dynamic>> submit(String uid) async {
     var assessmentRef = getAssesmentCollection(uid);
     return assessmentRef.doc(id).set(toJsonAssessment()).then((value) {
-      return databaseRef.child("assessmentStatus/$id").child(uid).set(true).then((value) {
-        return {"code": "Success", "message": "Assessment Submitted"};
+      return databaseRef
+          .child("assessmentStatus/$id")
+          .child(uid)
+          .set(true)
+          .then((value) {
+        return {
+          "code": "Success!",
+          "message": "Your assessment has been submitted successfully"
+        };
       }).catchError((error) {
-        return {"code": "Failed", "message": "Error Occurred. PLease try again"};
+        return {
+          "code": "Failed!",
+          "message": "Error Occurred. PLease try again"
+        };
       });
     });
   }
 }
 
 class Question {
-  Question({required this.question, required this.type, this.choices, this.questionBool, this.choice, this.answer, this.mandatory = false});
+  Question(
+      {required this.question,
+      required this.type,
+      this.choices,
+      this.questionBool,
+      this.choice,
+      this.answer,
+      this.mandatory = false});
 
   String question;
   QuestionType type;
@@ -96,7 +118,9 @@ class Question {
         question: json["question"],
         mandatory: json["mandatory"] ?? false,
         type: QuestionType.values.elementAt(json["type"]),
-        choices: json["choices"] != null ? List<String>.from(json["choices"].map((x) => x)) : null,
+        choices: json["choices"] != null
+            ? List<String>.from(json["choices"].map((x) => x))
+            : null,
         questionBool: json["bool"],
         choice: json["choice"],
         answer: json["answer"],
@@ -109,7 +133,9 @@ class Question {
           "question": question,
           "mandatory": mandatory,
           "type": QuestionType.values.indexOf(type),
-          "choices": choices != null ? List<dynamic>.from(choices!.map((x) => x)) : null,
+          "choices": choices != null
+              ? List<dynamic>.from(choices!.map((x) => x))
+              : null,
           // "bool": questionBool,
           "choice": choice,
           // "answer": answer,
@@ -139,7 +165,9 @@ class Question {
           "question": question,
           "mandatory": mandatory,
           "type": QuestionType.values.indexOf(type),
-          "choices": choices != null ? List<dynamic>.from(choices!.map((x) => x)) : null,
+          "choices": choices != null
+              ? List<dynamic>.from(choices!.map((x) => x))
+              : null,
           "bool": questionBool,
           "choice": choice,
           "answer": answer,
@@ -150,7 +178,8 @@ class Question {
   Map<String, dynamic> toJsonAssessment() => {
         "question": question,
         "type": QuestionType.values.indexOf(type),
-        "choices": choices != null ? List<dynamic>.from(choices!.map((x) => x)) : null,
+        "choices":
+            choices != null ? List<dynamic>.from(choices!.map((x) => x)) : null,
       };
 
   bool get isAnswered {
