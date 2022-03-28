@@ -10,10 +10,23 @@ import 'package:safecampus/screens/profile/profile_form.dart';
 // import 'package:fluttericon/entypo_icons.dart';
 // import 'package:fluttericon/elusive_icons.dart';
 
-const String url = 'https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png';
+const String url =
+    'https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
+
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  @override
+  void initState() {
+    userController.listenProfile();
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,10 +55,12 @@ class ProfilePage extends StatelessWidget {
                             alignment: const AlignmentDirectional(0, 0),
                             child: Material(
                               elevation: 10,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(18)),
                               child: Container(
                                   width: MediaQuery.of(context).size.width,
-                                  height: MediaQuery.of(context).size.height * 0.40,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.40,
                                   decoration: const BoxDecoration(
                                     // color: Color(0xFFED392D),
                                     gradient: LinearGradient(
@@ -69,23 +84,35 @@ class ProfilePage extends StatelessWidget {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Align(
-                                        alignment: const AlignmentDirectional(0, 0),
+                                        alignment:
+                                            const AlignmentDirectional(0, 0),
                                         child: Material(
                                           elevation: 20,
-                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(100)),
                                           child: Hero(
                                             tag: "avatar",
                                             child: Container(
                                               margin: const EdgeInsets.all(5),
-                                              width: MediaQuery.of(context).size.width * 0.3,
-                                              height: MediaQuery.of(context).size.width * 0.3,
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.3,
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.3,
                                               clipBehavior: Clip.antiAlias,
                                               decoration: const BoxDecoration(
                                                 shape: BoxShape.circle,
                                               ),
-                                              child: userController.user!.bioData.imageUrl != null
+                                              child: userController.user!
+                                                          .bioData.imageUrl !=
+                                                      null
                                                   ? Image.network(
-                                                      userController.user!.bioData.imageUrl!,
+                                                      userController.user!
+                                                          .bioData.imageUrl!,
                                                       fit: BoxFit.fitHeight,
                                                     )
                                                   : const Icon(
@@ -110,23 +137,32 @@ class ProfilePage extends StatelessWidget {
                                         ),
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.only(top: 5, bottom: 5),
+                                        padding: const EdgeInsets.only(
+                                            top: 5, bottom: 5),
                                         child: Text(
                                           userController.user!.bioData.id,
-                                          style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.bold),
                                         ),
                                       ),
                                       Center(
                                           child: Text(
-                                        dashboard.getName(userController.user!.bioData.department) ?? "Not Assigned",
-                                        style: const TextStyle(color: Colors.white, shadows: [Shadow(blurRadius: 2)]),
+                                        dashboard.getName(userController
+                                                .user!.bioData.department) ??
+                                            "Not Assigned",
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            shadows: [Shadow(blurRadius: 2)]),
                                       )),
                                     ],
                                   )),
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
+                            padding: const EdgeInsetsDirectional.fromSTEB(
+                                0, 20, 0, 0),
                             child: ListTile(
                               trailing: SizedBox(
                                 width: 150,
@@ -206,7 +242,10 @@ class ProfilePage extends StatelessWidget {
                           ListTile(
                             leading: const Icon(FontAwesome5.passport),
                             title: Text(
-                              userController.user!.bioData.userType == UserType.foreignStudent ? 'Passport Number' : "IC Number",
+                              userController.user!.bioData.userType ==
+                                      UserType.foreignStudent
+                                  ? 'Passport Number'
+                                  : "IC Number",
                               style: const TextStyle(
                                 fontFamily: 'Lexend Deca',
                                 color: Colors.black,
@@ -230,7 +269,8 @@ class ProfilePage extends StatelessWidget {
                           ),
                           const Divider(),
                           ListTile(
-                            leading: const Icon(Icons.supervised_user_circle_outlined),
+                            leading: const Icon(
+                                Icons.supervised_user_circle_outlined),
                             title: const Text(
                               'Department',
                               style: TextStyle(
@@ -243,7 +283,9 @@ class ProfilePage extends StatelessWidget {
                             subtitle: Padding(
                               padding: const EdgeInsets.only(top: 10),
                               child: Text(
-                                dashboard.getName(userController.user!.bioData.department) ?? "Not Assigned",
+                                dashboard.getName(userController
+                                        .user!.bioData.department) ??
+                                    "Not Assigned",
                                 style: const TextStyle(
                                   fontFamily: 'Lexend Deca',
                                   color: Colors.black,
@@ -323,7 +365,8 @@ class ProfilePage extends StatelessWidget {
                               subtitle: Padding(
                                 padding: const EdgeInsets.only(top: 10),
                                 child: Text(
-                                  userController.user!.bioData.residenceAddress!,
+                                  userController
+                                      .user!.bioData.residenceAddress!,
                                   style: const TextStyle(
                                     fontFamily: 'Lexend Deca',
                                     color: Colors.black,

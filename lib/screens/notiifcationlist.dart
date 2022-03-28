@@ -16,7 +16,7 @@ class NotificationList extends StatelessWidget {
       child: Card(
         child: ListTile(
           onTap: () {
-            Get.to(() => Home());
+            // Get.to(() => Home());
           },
           leading: CircleAvatar(
             child: Image.asset("assets/icon/icon.png"),
@@ -45,17 +45,26 @@ class NotificationList extends StatelessWidget {
           title: const Text("Notification List"),
         ),
         body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-          stream: users.doc(userController.user!.uid).collection('Notification').orderBy('time', descending: true).snapshots(),
+          stream: users
+              .doc(userController.user!.uid)
+              .collection('Notification')
+              .orderBy('time', descending: true)
+              .snapshots(),
           builder: (BuildContext context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.active || snapshot.hasData) {
+            if (snapshot.connectionState == ConnectionState.active ||
+                snapshot.hasData) {
               print(snapshot.data!.docs.length);
-              return ListView.builder(
-                  itemCount: snapshot.data!.docs.length,
-                  itemBuilder: (context, index) {
-                    return getTile(snapshot.data!.docs[index].data(), () {
-                      snapshot.data?.docs[index].reference.delete();
-                    });
-                  });
+              return snapshot.data!.docs.isEmpty
+                  ? const Center(
+                      child: Text("No Notification"),
+                    )
+                  : ListView.builder(
+                      itemCount: snapshot.data!.docs.length,
+                      itemBuilder: (context, index) {
+                        return getTile(snapshot.data!.docs[index].data(), () {
+                          snapshot.data?.docs[index].reference.delete();
+                        });
+                      });
             }
             return const Center(child: CircularProgressIndicator());
           },

@@ -12,7 +12,8 @@ class CustomTextBox extends StatelessWidget {
       this.bottomPad = 8,
       this.maxLines,
       this.prefixIcon,
-      this.enabled})
+      this.enabled,
+      this.validator})
       : super(key: key);
 
   final TextEditingController controller;
@@ -25,12 +26,14 @@ class CustomTextBox extends StatelessWidget {
   final int? maxLines;
   final bool? enabled;
   final Icon? prefixIcon;
+  final String? Function(String?)? validator;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(bottom: bottomPad),
       child: TextFormField(
+        validator: validator,
         maxLines: maxLines,
         onChanged: onChanged,
         onTap: onTap,

@@ -17,21 +17,33 @@ class CovidList extends StatelessWidget {
         appBar: AppBar(
           title: const Text("Covid History"),
           centerTitle: true,
+          actions: [
+            Padding(
+              padding: const EdgeInsets.all(13.0),
+              child: ElevatedButton(
+                  style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(Colors.white)),
+                  onPressed: () {
+                    showModalBottomSheet(
+                        isScrollControlled: true,
+                        context: context,
+                        builder: (context) {
+                          return Wrap(
+                            children: [
+                              SizedBox(
+                                  height: getHeight(context) * 0.75,
+                                  child: const CovidForm()),
+                            ],
+                          );
+                        });
+                  },
+                  child: Text(
+                    "Add Report",
+                    style: getText(context).button,
+                  )),
+            ),
+          ],
         ),
-        floatingActionButton: ElevatedButton(
-            onPressed: () {
-              showModalBottomSheet(
-                  isScrollControlled: true,
-                  context: context,
-                  builder: (context) {
-                    return Wrap(
-                      children: [
-                        SizedBox(height: getHeight(context) * 0.75, child: const CovidForm()),
-                      ],
-                    );
-                  });
-            },
-            child: const Text("Add Report")),
         body: GetBuilder(
             init: userController,
             builder: (context) {

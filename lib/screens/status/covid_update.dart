@@ -169,72 +169,42 @@ class _CovidFormState extends State<CovidForm> {
               ],
             ),
           ),
-          ListTile(
-            title: const Text("Vaccination Date"),
-            subtitle: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(format.format(_vaccinatedOn),
-                      style: getText(context).bodyText2),
-                  TextButton(
-                      onPressed: () async {
-                        _vaccinatedOn = await showDatePicker(
-                                context: context,
-                                initialDate: _vaccinatedOn,
-                                firstDate: _vaccinatedOn
-                                    .subtract(const Duration(days: 365)),
-                                lastDate: DateTime.now()) ??
-                            _date;
-                        setState(() {});
-                      },
-                      child: Text(
-                        "Change Date",
-                        style: getText(context).bodyText1,
-                      ))
-                ],
-              ),
-            ),
-          ),
+          _vaccinated == true
+              ? ListTile(
+                  title: const Text("Vaccination Date"),
+                  subtitle: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(format.format(_vaccinatedOn),
+                            style: getText(context).bodyText2),
+                        _vaccinated == true
+                            ? TextButton(
+                                onPressed: () async {
+                                  _vaccinatedOn = await showDatePicker(
+                                          context: context,
+                                          initialDate: _vaccinatedOn,
+                                          firstDate: _vaccinatedOn.subtract(
+                                              const Duration(days: 365)),
+                                          lastDate: DateTime.now()) ??
+                                      _date;
+                                  setState(() {});
+                                },
+                                child: Text(
+                                  "Change Date",
+                                  style: getText(context).bodyText1,
+                                ))
+                            : const Text(""),
+                      ],
+                    ),
+                  ),
+                )
+              : Text(''),
           ElevatedButton(
               onPressed: () {
-                userController.addCovidInfo(covidInfo).then((response) {
-                  // if (response.code == "error") {
-                  //   showDialog(
-                  //       context: context,
-                  //       builder: (context) {
-                  //         return AlertDialog(
-                  //           title: const Text("Error"),
-                  //           actions: [
-                  //             TextButton(
-                  //                 onPressed: () {
-                  //                   Navigator.of(context).pop();
-                  //                 },
-                  //                 child: const Text("Okay"))
-                  //           ],
-                  //         );
-                  //       });
-                  // } else {
-                  //   Navigator.of(context).pop();
-
-                  //   showDialog(
-                  //       context: context,
-                  //       builder: (context) {
-                  //         return AlertDialog(
-                  //           title: const Text("Report added successfully", style: TextStyle(color: Colors.black)),
-                  //           actions: [
-                  //             TextButton(
-                  //                 onPressed:() {
-                  //                   Navigator.of(context).pop();
-                  //                 },
-                  //                 child: const Text("Okay"))
-                  //           ],
-                  //         );
-                  //       });
-
-                  // }
-
+                if (_method != null && _vaccinated != null && _result != null) {
                   showFutureDialog(
                       context: context,
                       future: userController.addCovidInfo(covidInfo),
@@ -245,7 +215,24 @@ class _CovidFormState extends State<CovidForm> {
                       onFailure: () {
                         Navigator.of(context).pop();
                       });
-                });
+                } else {
+                  showDialog<String>(
+                    context: context,
+                    builder: (BuildContext context) => AlertDialog(
+                      // title: const Text('AlertDialog Title'),
+                      content: const Text('Please fill all the fields'),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, 'OK'),
+                          child: const Text('OK'),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+
+                // Find the ScaffoldMessenger in the widget tree
+                // and use it to show a SnackBar.
               },
               child: const Text("Submit")),
         ],
