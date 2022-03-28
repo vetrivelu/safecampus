@@ -48,6 +48,7 @@ class _HomeState extends State<Home> {
         if (message.notification != null) {
           print(message.notification!.body);
           print(message.notification!.title);
+
           print("message");
 
           if (message.notification!.title == "Contact Registered") {
