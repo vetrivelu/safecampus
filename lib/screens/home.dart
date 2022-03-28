@@ -45,8 +45,20 @@ class _HomeState extends State<Home> {
     super.initState();
     _firebaseMessaging.getInitialMessage().then((message) {
       if (message != null) {
-        final routeFromMessage = message.data["route"];
-        print(routeFromMessage);
+        if (message.notification != null) {
+          print(message.notification!.body);
+          print(message.notification!.title);
+          print("message");
+
+          if (message.notification!.title == "Contact Registered") {
+            Get.to(() => ContactHistoryDetails());
+          } else if (message.notification!.title ==
+              "You have been quarantined") {
+            Get.to(() => QuarantinePage(user: userController.user!));
+          } else {
+            Get.to(() => const AnnouncementList());
+          }
+        }
       }
     });
 
@@ -91,6 +103,7 @@ class _HomeState extends State<Home> {
         }
       }
     });
+
     _firebaseMessaging.setForegroundNotificationPresentationOptions(
         alert: true);
     _firebaseMessaging.subscribeToTopic('Announcement');
