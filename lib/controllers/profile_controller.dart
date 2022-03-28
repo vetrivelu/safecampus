@@ -184,7 +184,7 @@ class UserController extends GetxController {
         fcm: json["fcm"] ?? '',
         totalTimeinContact: json["totalTimeinContact"],
         groupId: json["groupId"],
-        deviceId: json["deviceId"],
+        deviceID: json["deviceId"],
         gateWay: json["gateWay"],
         lastContact:
             DateTime.fromMillisecondsSinceEpoch(json["lastContact"] * 1000),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:safecampus/controllers/profile_controller.dart';
+import 'package:safecampus/routers/auth_router.dart';
 
 import '../controllers/dashboard_controller.dart';
 
@@ -20,6 +21,13 @@ class ContactHistoryDetails extends StatelessWidget {
       body: GetBuilder(
           init: userController,
           builder: (context) {
+            if (userController.user == null) {
+              return ElevatedButton(
+                  onPressed: () {
+                    Get.offAll(() => const AuthRouter());
+                  },
+                  child: const Text("Please login again"));
+            }
             return (userController.user!.contactHistory ?? []).isEmpty
                 ? const Center(
                     child: Text(
@@ -31,34 +39,46 @@ class ContactHistoryDetails extends StatelessWidget {
                       Expanded(
                         child: ListView.builder(
                           physics: const BouncingScrollPhysics(),
-                          itemCount: userController.user!.contactHistory != null ? userController.user!.contactHistory!.length : 0,
+                          itemCount: userController.user!.contactHistory != null
+                              ? userController.user!.contactHistory!.length
+                              : 0,
                           itemBuilder: (context, index) {
                             return Padding(
-                              padding: const EdgeInsetsDirectional.fromSTEB(8, 8, 8, 0),
+                              padding: const EdgeInsetsDirectional.fromSTEB(
+                                  8, 8, 8, 0),
                               child: Container(
                                 width: MediaQuery.of(context).size.width * 0.9,
-                                height: MediaQuery.of(context).size.height * 0.15,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.15,
                                 decoration: BoxDecoration(
                                   color: const Color(0xFFAF2922),
                                   borderRadius: BorderRadius.circular(15),
                                 ),
                                 child: Padding(
-                                    padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 10, 10),
+                                    padding:
+                                        const EdgeInsetsDirectional.fromSTEB(
+                                            20, 20, 10, 10),
                                     child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         TextForDetails(
-                                          data: 'Beacon Holder Name : ${userController.user!.contactHistory![index].contact}',
+                                          data:
+                                              'Beacon Holder Name : ${userController.user!.contactHistory![index].contact}',
                                         ),
                                         TextForDetails(
-                                          data: 'Group ID : ${userController.user!.contactHistory![index].groupId}',
+                                          data:
+                                              'Group ID : ${userController.user!.contactHistory![index].groupId}',
                                         ),
                                         TextForDetails(
-                                          data: 'Device ID : ${userController.user!.contactHistory![index].deviceID}',
+                                          data:
+                                              'Device ID : ${userController.user!.contactHistory![index].deviceID}',
                                         ),
                                         TextForDetails(
-                                          data: 'Date & Time :${format.format(userController.user!.contactHistory![index].lastContact!)}',
+                                          data:
+                                              'Date & Time :${format.format(userController.user!.contactHistory![index].lastContact!)}',
                                         ),
                                         TextForDetails(
                                             data:

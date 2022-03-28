@@ -54,7 +54,7 @@ class _HomeState extends State<Home> {
           if (message.notification!.title == "Contact Registered") {
             Get.to(() => ContactHistoryDetails());
           } else if (message.notification!.title ==
-              "You have been quarantined") {
+              "You have been quarantined!") {
             Get.to(() => QuarantinePage(user: userController.user!));
           } else {
             Get.to(() => const AnnouncementList());
