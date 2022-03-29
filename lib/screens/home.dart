@@ -280,19 +280,12 @@ class _HomeState extends State<Home> {
                   GetBuilder(
                       init: userController,
                       builder: (context) {
-                        return Badge(
-                          showBadge:
-                              userController.pendingAssesmentList.isNotEmpty,
-                          badgeContent: Text(userController
-                              .pendingAssesmentList.length
-                              .toString()),
-                          child: Tile(
-                            title: 'Assesments',
-                            image: 'assets/images/profile.png',
-                            onTap: () {
-                              Get.to(() => AssessmentList());
-                            },
-                          ),
+                        return Tile(
+                          title: 'Assesments',
+                          image: 'assets/images/profile.png',
+                          onTap: () {
+                            Get.to(() => AssessmentList());
+                          },
                         );
                       }),
                   // Expanded(

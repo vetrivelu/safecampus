@@ -34,6 +34,7 @@ class _ProfilePageState extends State<ProfilePage> {
         floatingActionButton: FloatingActionButton.small(
           onPressed: () {
             Navigator.of(context).pop();
+            setState(() {});
           },
           elevation: 0,
           backgroundColor: Colors.transparent,

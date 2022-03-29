@@ -59,8 +59,14 @@ class WhistleBlower extends StatelessWidget {
                       return Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          ListTile(onTap: captureFile, leading: const Icon(Icons.camera), title: const Text("Take a photo")),
-                          ListTile(onTap: chooseFiles, leading: const Icon(Icons.photo_album), title: const Text("Pick Images from Gallery")),
+                          ListTile(
+                              onTap: captureFile,
+                              leading: const Icon(Icons.camera),
+                              title: const Text("Take a photo")),
+                          ListTile(
+                              onTap: chooseFiles,
+                              leading: const Icon(Icons.photo_album),
+                              title: const Text("Pick Images from Gallery")),
                         ],
                       );
                     });
@@ -75,8 +81,10 @@ class WhistleBlower extends StatelessWidget {
             child: FloatingActionButton(
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
-                  var future =
-                      Complaint.createComplaint(description: controller.description.text, title: controller.title.text, files: controller.files);
+                  var future = Complaint.createComplaint(
+                      description: controller.description.text,
+                      title: controller.title.text,
+                      files: controller.files);
                   showFutureDialog(
                       context: context,
                       future: future,
@@ -103,79 +111,82 @@ class WhistleBlower extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: Form(
                 key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const Icon(
-                      ModernPictograms.bullhorn,
-                      size: 100,
-                    ),
-                    const Divider(),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: CustomTextFormField(
-                        controller: controller.title,
-                        labelText: "Title",
-                        hintText: "Enter title",
-                        validator: (String? p1) {
-                          var text = p1 ?? '';
-                          if (text.isEmpty) {
-                            return 'This is a required field';
-                          }
-                          return null;
-                        },
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        ModernPictograms.bullhorn,
+                        size: 100,
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: CustomTextFormField(
-                        controller: controller.description,
-                        labelText: "Description",
-                        hintText: "Enter description",
-                        maxlines: 6,
-                        validator: (String? p1) {
-                          var text = p1 ?? '';
-                          if (text.isEmpty) {
-                            return 'This is a required field';
-                          }
-                          return null;
-                        },
+                      const Divider(),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: CustomTextFormField(
+                          controller: controller.title,
+                          labelText: "Title",
+                          hintText: "Enter title",
+                          validator: (String? p1) {
+                            var text = p1 ?? '';
+                            if (text.isEmpty) {
+                              return 'This is a required field';
+                            }
+                            return null;
+                          },
+                        ),
                       ),
-                    ),
-                    const Divider(),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: CustomTextFormField(
+                          controller: controller.description,
+                          labelText: "Description",
+                          hintText: "Enter description",
+                          maxlines: 6,
+                          validator: (String? p1) {
+                            var text = p1 ?? '';
+                            if (text.isEmpty) {
+                              return 'This is a required field';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                      const Divider(),
 
-                    Wrap(
-                      children: controller.files
-                          .map((e) => FileImage(
-                                path: e.path,
-                                onTap: () {
-                                  controller.files.removeWhere((element) => element.path == e.path);
-                                  controller.update();
-                                },
-                              ))
-                          .toList(),
-                    ),
-                    // controller.file == null
-                    //     ? Container()
-                    //     : Expanded(
-                    //         child: Align(
-                    //           alignment: Alignment.topCenter,
-                    //           child: Badge(
-                    //               badgeContent: GestureDetector(
-                    //                 onTap: () {
-                    //                   controller.file = null;
-                    //                 },
-                    //                 child: const Icon(Icons.cancel, color: Colors.white),
-                    //               ),
-                    //               child: Image.file(controller.file!)),
-                    //         ),
-                    // child: FileImage(
-                    // path: controller.file!.path,
-                    // onTap: () {
-                    //   controller.file = null;
-                    // },
-                    // ),
-                  ],
+                      Wrap(
+                        children: controller.files
+                            .map((e) => FileImage(
+                                  path: e.path,
+                                  onTap: () {
+                                    controller.files.removeWhere(
+                                        (element) => element.path == e.path);
+                                    controller.update();
+                                  },
+                                ))
+                            .toList(),
+                      ),
+                      // controller.file == null
+                      //     ? Container()
+                      //     : Expanded(
+                      //         child: Align(
+                      //           alignment: Alignment.topCenter,
+                      //           child: Badge(
+                      //               badgeContent: GestureDetector(
+                      //                 onTap: () {
+                      //                   controller.file = null;
+                      //                 },
+                      //                 child: const Icon(Icons.cancel, color: Colors.white),
+                      //               ),
+                      //               child: Image.file(controller.file!)),
+                      //         ),
+                      // child: FileImage(
+                      // path: controller.file!.path,
+                      // onTap: () {
+                      //   controller.file = null;
+                      // },
+                      // ),
+                    ],
+                  ),
                 ),
               ),
             );
@@ -212,7 +223,8 @@ class FileImage extends StatelessWidget {
             Positioned(
               top: 1,
               right: 1,
-              child: GestureDetector(onTap: onTap, child: const Icon(Icons.cancel)),
+              child: GestureDetector(
+                  onTap: onTap, child: const Icon(Icons.cancel)),
             )
           ],
         ),
