@@ -77,6 +77,7 @@ class UserController extends GetxController {
       } else {
         user = null;
       }
+
       update();
     });
   }

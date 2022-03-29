@@ -53,8 +53,7 @@ class _HomeState extends State<Home> {
 
           if (message.notification!.title == "Contact Registered") {
             Get.to(() => ContactHistoryDetails());
-          } else if (message.notification!.title ==
-              "You have been quarantined!") {
+          } else if (message.notification!.title == "Quarantine") {
             Get.to(() => QuarantinePage(user: userController.user!));
           } else {
             Get.to(() => const AnnouncementList());
@@ -97,7 +96,7 @@ class _HomeState extends State<Home> {
 
         if (message.notification!.title == "Contact Registered") {
           Get.to(() => ContactHistoryDetails());
-        } else if (message.notification!.title == "You have been quarantined") {
+        } else if (message.notification!.title == "Quarantine") {
           Get.to(() => QuarantinePage(user: userController.user!));
         } else {
           Get.to(() => const AnnouncementList());
@@ -277,19 +276,12 @@ class _HomeState extends State<Home> {
                   GetBuilder(
                       init: userController,
                       builder: (context) {
-                        return Badge(
-                          showBadge:
-                              userController.pendingAssesmentList.isNotEmpty,
-                          badgeContent: Text(userController
-                              .pendingAssesmentList.length
-                              .toString()),
-                          child: Tile(
-                            title: 'Assesments',
-                            image: 'assets/images/profile.png',
-                            onTap: () {
-                              Get.to(() => AssessmentList());
-                            },
-                          ),
+                        return Tile(
+                          title: 'Assesments',
+                          image: 'assets/images/profile.png',
+                          onTap: () {
+                            Get.to(() => AssessmentList());
+                          },
                         );
                       }),
                   // Expanded(
