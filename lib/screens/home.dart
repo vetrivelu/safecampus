@@ -10,6 +10,7 @@ import 'package:safecampus/controllers/auth_controller.dart';
 import 'package:safecampus/controllers/dashboard_controller.dart';
 
 import 'package:safecampus/controllers/profile_controller.dart';
+import 'package:safecampus/routers/auth_router.dart';
 import 'package:safecampus/screens/notiifcationlist.dart';
 import 'package:safecampus/screens/profile/profile.dart';
 
@@ -53,8 +54,7 @@ class _HomeState extends State<Home> {
 
           if (message.notification!.title == "Contact Registered") {
             Get.to(() => ContactHistoryDetails());
-          } else if (message.notification!.title ==
-              "You have been quarantined!") {
+          } else if (message.notification!.title == "Quarantine") {
             Get.to(() => QuarantinePage(user: userController.user!));
           } else {
             Get.to(() => const AnnouncementList());
@@ -96,10 +96,13 @@ class _HomeState extends State<Home> {
         print("message");
 
         if (message.notification!.title == "Contact Registered") {
-          Get.to(() => ContactHistoryDetails());
-        } else if (message.notification!.title == "You have been quarantined") {
-          Get.to(() => QuarantinePage(user: userController.user!));
+          Get.offAll(AuthRouter());
+          Get.to(ContactHistoryDetails());
+        } else if (message.notification!.title == "Quarantine") {
+          Get.offAll(AuthRouter());
+          Get.to(QuarantinePage(user: userController.user!));
         } else {
+          Get.offAll(AuthRouter());
           Get.to(() => const AnnouncementList());
         }
       }

@@ -26,6 +26,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
+  bool obscurePassword = true;
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +63,17 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: CustomTextBox(
+                      maxLines: 1,
+                      suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              obscurePassword = !obscurePassword;
+                            });
+                          },
+                          icon: obscurePassword
+                              ? Icon(Icons.visibility_off)
+                              : Icon(Icons.visibility)),
+                      obscureText: obscurePassword,
                       controller: passwordController,
                       labelText: "Password",
                       hintText: "Enter password"),
@@ -69,6 +81,8 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: CustomTextBox(
+                      maxLines: 1,
+                      obscureText: obscurePassword,
                       controller: confirmPasswordController,
                       labelText: "Confirm Password",
                       hintText: "Re-Enter password"),
@@ -80,10 +94,12 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                           passwordController.text.isEmpty) {
                         title = "Empty Email or Password";
                         message = "Please fill-out both email and password";
-                      } else if (!emailController.text.isEmail) {
+                      } else if (!emailController
+                          .text.removeAllWhitespace.isEmail) {
                         title = "Invalid Email";
                         message = "Please enter a valid email";
                       } else {
+                        print("object");
                         await auth
                             .createUserWithEmailAndPassword(
                                 emailController.text.removeAllWhitespace,
@@ -108,6 +124,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                             return AlertDialog(
                               backgroundColor: Colors.red[100],
                               title: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Image.asset(
                                     "assets/icon/iuicon2.png",
@@ -119,7 +136,10 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                                   ),
                                 ],
                               ),
-                              content: Text(message),
+                              content: Text(
+                                message,
+                                textAlign: TextAlign.center,
+                              ),
                               actions: [
                                 Center(
                                   child: ElevatedButton(

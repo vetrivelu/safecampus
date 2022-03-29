@@ -13,7 +13,9 @@ class CustomTextBox extends StatelessWidget {
       this.maxLines,
       this.prefixIcon,
       this.enabled,
-      this.validator})
+      this.obscureText = false,
+      this.validator,
+      this.suffixIcon})
       : super(key: key);
 
   final TextEditingController controller;
@@ -27,6 +29,8 @@ class CustomTextBox extends StatelessWidget {
   final bool? enabled;
   final Icon? prefixIcon;
   final String? Function(String?)? validator;
+  final Widget? suffixIcon;
+  final bool obscureText;
 
   @override
   Widget build(BuildContext context) {
@@ -40,8 +44,9 @@ class CustomTextBox extends StatelessWidget {
         keyboardType: keyboardType,
         enabled: enabled,
         controller: controller,
-        obscureText: false,
+        obscureText: obscureText,
         decoration: InputDecoration(
+          suffixIcon: suffixIcon,
           labelText: labelText,
           labelStyle: const TextStyle(
             fontFamily: 'Lexend Deca',

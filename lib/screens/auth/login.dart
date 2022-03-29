@@ -63,10 +63,13 @@ class _LoginState extends State<Login> {
                       children: [
                         Text(
                           "Safe Campus",
-                          style: getText(context).headline6!.copyWith(color: Colors.black),
+                          style: getText(context)
+                              .headline6!
+                              .copyWith(color: Colors.black),
                         ),
                         Padding(
-                          padding: const EdgeInsetsDirectional.fromSTEB(20, 10, 30, 20),
+                          padding: const EdgeInsetsDirectional.fromSTEB(
+                              20, 10, 30, 20),
                           child: Image.asset(
                             'assets/images/iukl_logo.png',
                             width: MediaQuery.of(context).size.width * 0.7,
@@ -77,14 +80,16 @@ class _LoginState extends State<Login> {
                       ],
                     ),
                     Padding(
-                      padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 20, 20),
+                      padding:
+                          const EdgeInsetsDirectional.fromSTEB(20, 20, 20, 20),
                       child: SizedBox(
                         width: MediaQuery.of(context).size.width * 0.7,
                         height: MediaQuery.of(context).size.height * 0.01,
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
+                      padding:
+                          const EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -101,7 +106,8 @@ class _LoginState extends State<Login> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
+                      padding:
+                          const EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -137,23 +143,28 @@ class _LoginState extends State<Login> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
+                      padding:
+                          const EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
                       child: SizedBox(
                         height: MediaQuery.of(context).size.width * 0.12,
                         width: MediaQuery.of(context).size.width * 0.50,
                         child: ElevatedButton(
                           style: ButtonStyle(
                             elevation: MaterialStateProperty.all(10),
-                            shadowColor: MaterialStateProperty.all(Colors.redAccent),
-                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+                            shadowColor:
+                                MaterialStateProperty.all(Colors.redAccent),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(18.0),
                             )),
                           ),
                           onPressed: () async {
                             String title = '', message = '';
-                            if (emailController.text.isEmpty || passwordController.text.isEmpty) {
+                            if (emailController.text.isEmpty ||
+                                passwordController.text.isEmpty) {
                               title = "Empty Email or Password";
-                              message = "Please fill-out both email and password";
+                              message =
+                                  "Please fill-out both email and password";
                               showDialog(
                                   context: context,
                                   builder: (context) {
@@ -169,7 +180,8 @@ class _LoginState extends State<Login> {
                                       ],
                                     );
                                   });
-                            } else if (!emailController.text.removeAllWhitespace.isEmail) {
+                            } else if (!emailController
+                                .text.removeAllWhitespace.isEmail) {
                               title = "Invalid Email";
                               message = "Please enter a valid email";
                               showDialog(
@@ -188,7 +200,11 @@ class _LoginState extends State<Login> {
                                     );
                                   });
                             } else {
-                              await auth.signInWithEmailAndPassword(emailController.text.removeAllWhitespace, passwordController.text).then((value) {
+                              await auth
+                                  .signInWithEmailAndPassword(
+                                      emailController.text.removeAllWhitespace,
+                                      passwordController.text)
+                                  .then((value) {
                                 Navigator.of(context).popAndPushNamed('/');
                               }).catchError((error) {
                                 title = error.code ?? "Error";
@@ -211,7 +227,9 @@ class _LoginState extends State<Login> {
                               });
                             }
                           },
-                          child: const Text("Login", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                          child: const Text("Login",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 15)),
                         ),
                       ),
                     ),
@@ -222,7 +240,7 @@ class _LoginState extends State<Login> {
                             context: context,
                             builder: (context) {
                               return ForgotPassword(
-                                email: emailController.text,
+                                email: emailController.text.removeAllWhitespace,
                               );
                             });
                       },
@@ -253,7 +271,8 @@ class _LoginState extends State<Login> {
                     //   ),
                     // ),
                     Padding(
-                      padding: const EdgeInsetsDirectional.fromSTEB(0, 50, 0, 24),
+                      padding:
+                          const EdgeInsetsDirectional.fromSTEB(0, 50, 0, 24),
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -274,7 +293,8 @@ class _LoginState extends State<Login> {
                                   context: context,
                                   builder: (context) {
                                     return SignUpWidget(
-                                      email: emailController.text,
+                                      email: emailController
+                                          .text.removeAllWhitespace,
                                     );
                                   });
                             },

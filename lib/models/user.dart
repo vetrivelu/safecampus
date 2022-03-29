@@ -105,7 +105,7 @@ class UserModel {
         "uid": uid,
         "isStaff": isStaff,
         "device": device != null ? device!.toJson() : null,
-        // "quarantine": quarantine != null ? quarantine!.toJson() : null,
+        "quarantine": quarantine?.toJson(),
         "covidInfo": latestCovid?.toJson(),
         "contactHistory": contactHistory != null
             ? List<dynamic>.from(contactHistory!.map((x) => x.toJson()))
@@ -168,13 +168,15 @@ class Quarantine {
 }
 
 class Location {
-  Location(
-      {required this.place,
-      this.floor,
-      this.block,
-      this.inCampus = true,
-      this.quarantineAddress,
-      this.roomNumbmer});
+  Location({
+    required this.place,
+    this.floor,
+    this.block,
+    this.inCampus = true,
+    this.quarantineAddress,
+    this.roomNumbmer,
+    this.outCampus,
+  });
 
   String? place;
   int? floor;
@@ -182,14 +184,17 @@ class Location {
   String? roomNumbmer;
   bool inCampus;
   String? quarantineAddress;
+  String? outCampus;
 
   factory Location.fromJson(Map<String, dynamic> json) => Location(
-      place: json["place"],
-      floor: json["floor"],
-      block: json["block"],
-      inCampus: json["inCampus"] ?? false,
-      quarantineAddress: json["quarantineAddress"],
-      roomNumbmer: json["roomNumbmer"]);
+        place: json["place"],
+        floor: json["floor"],
+        block: json["block"],
+        inCampus: json["inCampus"] ?? false,
+        quarantineAddress: json["quarantineAddress"],
+        roomNumbmer: json["roomNumbmer"],
+        outCampus: json["outCampus"],
+      );
 
   Map<String, dynamic> toJson() => {
         "place": place,
@@ -198,6 +203,7 @@ class Location {
         "inCampus": inCampus,
         "quarantineAddress": quarantineAddress,
         "roomNumbmer": roomNumbmer,
+        "outCampus": outCampus,
       };
 }
 

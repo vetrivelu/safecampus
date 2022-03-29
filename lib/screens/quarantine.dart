@@ -18,7 +18,11 @@ class _QuarantinePageState extends State<QuarantinePage> {
   }
 
   int get daysLeft =>
-      userController.user!.quarantine!.endDate.difference(DateTime.utc(DateTime.now().year, DateTime.now().month, DateTime.now().day)).inDays + 1;
+      userController.user!.quarantine!.endDate
+          .difference(DateTime.utc(
+              DateTime.now().year, DateTime.now().month, DateTime.now().day))
+          .inDays +
+      1;
   // int get daysLeft =>
   //     DateTime.utc(DateTime.now().year, DateTime.now().month, DateTime.now().day).difference(userController.user!.quarantine!.endDate).inDays;
 
@@ -63,8 +67,16 @@ class _QuarantinePageState extends State<QuarantinePage> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text("$daysLeft", style: const TextStyle(fontSize: 60, fontWeight: FontWeight.bold, color: Colors.white)),
-                              const Text("days left", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white)),
+                              Text("$daysLeft",
+                                  style: const TextStyle(
+                                      fontSize: 60,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white)),
+                              const Text("days left",
+                                  style: TextStyle(
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white)),
                             ],
                           ),
                         )
@@ -95,68 +107,97 @@ class _QuarantinePageState extends State<QuarantinePage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
+                                widget.user.quarantine?.location.outCampus ==
+                                        null
+                                    ? Container()
+                                    : Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: RichText(
+                                          maxLines: 5,
+                                          text: TextSpan(
+                                              text: 'Location       :  ',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.grey[600]),
+                                              children: [
+                                                TextSpan(
+                                                  text: widget.user.quarantine!
+                                                      .location.outCampus,
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.normal,
+                                                      color: Colors.grey[500]),
+                                                )
+                                              ]),
+                                        ),
+                                      ),
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: RichText(
                                     maxLines: 5,
                                     text: TextSpan(
                                         text: 'Address       :  ',
-                                        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey[600]),
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.grey[600]),
                                         children: [
                                           TextSpan(
-                                            text: widget.user.quarantine!.location.place,
-                                            style: TextStyle(fontWeight: FontWeight.normal, color: Colors.grey[500]),
+                                            text: widget.user.quarantine!
+                                                .location.place,
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.normal,
+                                                color: Colors.grey[500]),
                                           )
                                         ]),
                                   ),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: RichText(
-                                    text: TextSpan(
-                                        text: "Block            :  ",
-                                        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey[600]),
-                                        children: [
-                                          TextSpan(
-                                            text: widget.user.quarantine!.location.block,
-                                            style: TextStyle(fontWeight: FontWeight.normal, color: Colors.grey[500]),
-                                          )
-                                        ]),
-                                  ),
-                                ),
-
-                                // Padding(
-                                //   padding: const EdgeInsets.all(8.0),
-                                //   child: RichText(
-                                //     text: TextSpan(
-                                //         text: "Floor             :  ",
-                                //         style: TextStyle(
-                                //             fontWeight: FontWeight.bold,
-                                //             color: Colors.grey[600]),
-                                //         children: [
-                                //           TextSpan(
-                                //             text: widget.user.quarantine!.location.floor.toString(),
-                                //             style: TextStyle(
-                                //                 fontWeight: FontWeight.normal,
-                                //                 color: Colors.grey[500]),
-                                //           )
-                                //         ]),
-                                //   ),
-                                // ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: RichText(
-                                    text: TextSpan(
-                                        text: "Room NO     :  ",
-                                        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey[600]),
-                                        children: [
-                                          TextSpan(
-                                            text: widget.user.quarantine!.location.roomNumbmer.toString(),
-                                            style: TextStyle(fontWeight: FontWeight.normal, color: Colors.grey[500]),
-                                          )
-                                        ]),
-                                  ),
-                                ),
+                                widget.user.quarantine?.location.roomNumbmer ==
+                                        null
+                                    ? Container()
+                                    : Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: RichText(
+                                          text: TextSpan(
+                                              text: "Block            :  ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.grey[600]),
+                                              children: [
+                                                TextSpan(
+                                                  text: widget.user.quarantine!
+                                                      .location.block,
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.normal,
+                                                      color: Colors.grey[500]),
+                                                )
+                                              ]),
+                                        ),
+                                      ),
+                                widget.user.quarantine?.location.roomNumbmer ==
+                                        null
+                                    ? Container()
+                                    : Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: RichText(
+                                          text: TextSpan(
+                                              text: "Room NO     :  ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.grey[600]),
+                                              children: [
+                                                TextSpan(
+                                                  text: widget.user.quarantine!
+                                                      .location.roomNumbmer
+                                                      .toString(),
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.normal,
+                                                      color: Colors.grey[500]),
+                                                )
+                                              ]),
+                                        ),
+                                      ),
                               ],
                             ),
                           ),
