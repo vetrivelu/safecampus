@@ -100,22 +100,28 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                         message = "Please enter a valid email";
                       } else {
                         print("object");
-                        await auth
-                            .createUserWithEmailAndPassword(
-                                emailController.text.removeAllWhitespace,
-                                passwordController.text)
-                            .then((user) {
-                          title = "Success";
-                          message = "Please log in to continue";
-                          if (user != null) {
-                            user.sendEmailVerification();
-                          }
-                          Navigator.of(context).popAndPushNamed('/sign-in');
-                        }).catchError((error) {
-                          title =
-                              (error.code ?? "Error").toString().capitalize!;
-                          message = error.message ?? "Unknown Error";
-                        });
+                        if (passwordController.text.toString() ==
+                            confirmPasswordController.text.toString()) {
+                          await auth
+                              .createUserWithEmailAndPassword(
+                                  emailController.text.removeAllWhitespace,
+                                  passwordController.text)
+                              .then((user) {
+                            title = "Success";
+                            message = "Please log in to continue";
+                            if (user != null) {
+                              user.sendEmailVerification();
+                            }
+                            Navigator.of(context).popAndPushNamed('/sign-in');
+                          }).catchError((error) {
+                            title =
+                                (error.code ?? "Error").toString().capitalize!;
+                            message = error.message ?? "Unknown Error";
+                          });
+                        } else {
+                          title = "Password doesn't match";
+                          // message = "Please enter a valid email";
+                        }
                       }
 
                       showDialog(

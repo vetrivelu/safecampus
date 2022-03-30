@@ -65,6 +65,17 @@ class UserController extends GetxController {
     update();
   }
 
+  loadQuarantine() {
+    users
+        .doc(id)
+        .get()
+        .then((value) => UserModel.fromJson(value.data()!))
+        .then((val) {
+      user?.quarantine = val.quarantine;
+      update();
+    });
+  }
+
   listenProfile() {
     users.doc(auth.uid).snapshots().listen((snapshot) {
       if (snapshot.exists) {
@@ -77,7 +88,6 @@ class UserController extends GetxController {
       } else {
         user = null;
       }
-
       update();
     });
   }
