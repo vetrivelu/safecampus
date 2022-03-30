@@ -96,13 +96,13 @@ class _HomeState extends State<Home> {
         print("message");
 
         if (message.notification!.title == "Contact Registered") {
-          Get.offAll(AuthRouter());
+          Get.offAll(const AuthRouter());
           Get.to(ContactHistoryDetails());
         } else if (message.notification!.title == "Quarantine") {
-          Get.offAll(AuthRouter());
+          Get.offAll(const AuthRouter());
           Get.to(QuarantinePage(user: userController.user!));
         } else {
-          Get.offAll(AuthRouter());
+          Get.offAll(const AuthRouter());
           Get.to(() => const AnnouncementList());
         }
       }

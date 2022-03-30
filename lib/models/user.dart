@@ -187,13 +187,13 @@ class Location {
   String? outCampus;
 
   factory Location.fromJson(Map<String, dynamic> json) => Location(
-        place: json["place"],
-        floor: json["floor"],
-        block: json["block"],
-        inCampus: json["inCampus"] ?? false,
+        place: json["inCampus"] ? json["place"] : null, //building name
+        floor: json["inCampus"] ? json["floor"] : null, //buil
+        block: json["inCampus"] ? json["block"] : null, //buil
+        roomNumbmer: json["inCampus"] ? json["roomNumbmer"] : null, //buil
+        inCampus: json["inCampus"],
+        outCampus: json["inCampus"] ? null : json["outCampus"],
         quarantineAddress: json["quarantineAddress"],
-        roomNumbmer: json["roomNumbmer"],
-        outCampus: json["outCampus"],
       );
 
   Map<String, dynamic> toJson() => {

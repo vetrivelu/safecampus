@@ -26,8 +26,86 @@ class _QuarantinePageState extends State<QuarantinePage> {
               DateTime.now().year, DateTime.now().month, DateTime.now().day))
           .inDays +
       1;
+
+  Quarantine? get quarantine => widget.user.quarantine;
+
   // int get daysLeft =>
   //     DateTime.utc(DateTime.now().year, DateTime.now().month, DateTime.now().day).difference(userController.user!.quarantine!.endDate).inDays;
+
+  List<TableRow> getChildren() {
+    List<TableRow> list = [];
+    if (quarantine != null) {
+      if (quarantine!.location.inCampus == true) {
+        if (quarantine!.location.place != null) {
+          list.add(TableRow(children: [
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text("Building Name"),
+            ),
+            const Text(":"),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(quarantine!.location.place!),
+            )
+          ]));
+        }
+        if (quarantine!.location.block != null) {
+          list.add(TableRow(children: [
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text("Block"),
+            ),
+            const Text(":"),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(quarantine!.location.block!),
+            )
+          ]));
+        }
+        if (quarantine!.location.roomNumbmer != null) {
+          list.add(TableRow(children: [
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text("Room Number"),
+            ),
+            const Text(":"),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(quarantine!.location.roomNumbmer!),
+            )
+          ]));
+        }
+      } else {
+        if (quarantine!.location.outCampus != null) {
+          list.add(TableRow(children: [
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text("Location"),
+            ),
+            const Text(":"),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(quarantine!.location.outCampus!),
+            )
+          ]));
+        }
+      }
+      if (quarantine!.location.quarantineAddress != null) {
+        list.add(TableRow(children: [
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text("Address"),
+          ),
+          const Text(":"),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(quarantine!.location.quarantineAddress!),
+          )
+        ]));
+      }
+    }
+    return list;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -106,146 +184,23 @@ class _QuarantinePageState extends State<QuarantinePage> {
                       const SizedBox(
                         height: 10,
                       ),
-                      SizedBox(
-                        width: double.infinity,
-                        child: widget.user.quarantine == null
-                            ? const Center(child: Text("No records found"))
-                            : Card(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      (widget.user.quarantine?.location
-                                                  .inCampus ??
-                                              true)
-                                          ? Container()
-                                          : Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: RichText(
-                                                maxLines: 5,
-                                                text: TextSpan(
-                                                    text: 'Location :  ',
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color:
-                                                            Colors.grey[600]),
-                                                    children: [
-                                                      TextSpan(
-                                                        text: widget
-                                                            .user
-                                                            .quarantine!
-                                                            .location
-                                                            .outCampus,
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .normal,
-                                                            color: Colors
-                                                                .grey[500]),
-                                                      )
-                                                    ]),
-                                              ),
-                                            ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: RichText(
-                                          maxLines: 5,
-                                          text: TextSpan(
-                                              text: 'Address       :  ',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.grey[600]),
-                                              children: [
-                                                TextSpan(
-                                                  text: widget
-                                                      .user
-                                                      .quarantine!
-                                                      .location
-                                                      .quarantineAddress,
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.normal,
-                                                      color: Colors.grey[500]),
-                                                )
-                                              ]),
-                                        ),
-                                      ),
-                                      (widget.user.quarantine?.location
-                                                  .inCampus ??
-                                              true)
-                                          ? Container()
-                                          : Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: RichText(
-                                                text: TextSpan(
-                                                    text:
-                                                        "Block            :  ",
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color:
-                                                            Colors.grey[600]),
-                                                    children: [
-                                                      TextSpan(
-                                                        text: widget
-                                                            .user
-                                                            .quarantine!
-                                                            .location
-                                                            .block,
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .normal,
-                                                            color: Colors
-                                                                .grey[500]),
-                                                      )
-                                                    ]),
-                                              ),
-                                            ),
-                                      (widget.user.quarantine?.location
-                                                  .roomNumbmer ==
-                                              null)
-                                          ? Container()
-                                          : Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: RichText(
-                                                text: TextSpan(
-                                                    text: "Room NO     :  ",
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color:
-                                                            Colors.grey[600]),
-                                                    children: [
-                                                      TextSpan(
-                                                        text: widget
-                                                            .user
-                                                            .quarantine!
-                                                            .location
-                                                            .roomNumbmer
-                                                            .toString(),
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .normal,
-                                                            color: Colors
-                                                                .grey[500]),
-                                                      )
-                                                    ]),
-                                              ),
-                                            ),
-                                    ],
-                                  ),
-                                ),
-                              ),
+                      Card(
+                        elevation: 4,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Table(
+                            columnWidths: const {
+                              0: FlexColumnWidth(3),
+                              1: FlexColumnWidth(1),
+                              2: FlexColumnWidth(6),
+                            },
+                            defaultVerticalAlignment:
+                                TableCellVerticalAlignment.middle,
+                            children: getChildren(),
+                          ),
+                        ),
                       ),
+
                       const SizedBox(
                         height: 10,
                       ),
