@@ -48,12 +48,10 @@ class UserModel {
         "isGuest": false,
         "deviceID": device?.deviceId,
         "groupID": device?.groupId,
-        "quarantine":
-            quarantine != null ? quarantine!.location.place.toString() : null,
+        "quarantine": quarantine != null ? quarantine!.location.place.toString() : null,
         "isCovid": latestCovid?.result ?? false,
         "fcm": fcm,
-        "createdDate":
-            createdDate != null ? createdDate!.toIso8601String() : null,
+        "createdDate": createdDate != null ? createdDate!.toIso8601String() : null,
       };
 
   List<String> get searchString => makeSearchString(bioData.name);
@@ -81,20 +79,11 @@ class UserModel {
         uid: json["uid"],
         isStaff: json["isStaff"],
         device: json["device"] != null ? Device.fromJson(json["device"]) : null,
-        quarantine: json["quarantine"] != null
-            ? Quarantine.fromJson(json["quarantine"])
-            : null,
-        covidInfo: json["covidInfo"] != null
-            ? CovidInfo.fromJson(json["covidInfo"])
-            : null,
-        contactHistory: json["contactHistory"] != null
-            ? List<ContactHistory>.from(
-                json["contactHistory"].map((x) => ContactHistory.fromJson(x)))
-            : [],
-        covidHistory: json["covidHistory"] != null
-            ? List<CovidInfo>.from(
-                json["covidHistory"].map((x) => CovidInfo.fromJson(x)))
-            : [],
+        quarantine: json["quarantine"] != null ? Quarantine.fromJson(json["quarantine"]) : null,
+        covidInfo: json["covidInfo"] != null ? CovidInfo.fromJson(json["covidInfo"]) : null,
+        contactHistory:
+            json["contactHistory"] != null ? List<ContactHistory>.from(json["contactHistory"].map((x) => ContactHistory.fromJson(x))) : [],
+        covidHistory: json["covidHistory"] != null ? List<CovidInfo>.from(json["covidHistory"].map((x) => CovidInfo.fromJson(x))) : [],
         fcm: json["fcm"],
         createdDate: json["createdDate"]?.toDate(),
         assessments: [],
@@ -107,12 +96,8 @@ class UserModel {
         "device": device != null ? device!.toJson() : null,
         "quarantine": quarantine?.toJson(),
         "covidInfo": latestCovid?.toJson(),
-        "contactHistory": contactHistory != null
-            ? List<dynamic>.from(contactHistory!.map((x) => x.toJson()))
-            : null,
-        "covidHistory": covidHistory != null
-            ? List<dynamic>.from(covidHistory!.map((x) => x.toJson()))
-            : null,
+        "contactHistory": contactHistory != null ? List<dynamic>.from(contactHistory!.map((x) => x.toJson())) : null,
+        "covidHistory": covidHistory != null ? List<dynamic>.from(covidHistory!.map((x) => x.toJson())) : null,
         "fcm": fcm,
         "createdDate": createdDate,
         "search": bioData.searchString,
@@ -271,7 +256,7 @@ class ContactHistory {
         groupId: json["groupId"],
         deviceID: json["deviceId"],
         gateWay: json["gateWay"],
-        lastContact: DateTime.now(),
+        lastContact: json["lastContact"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -286,24 +271,9 @@ class ContactHistory {
 
   static getDummyContacts() {
     return [
-      ContactHistory(
-          contact: "user1",
-          fcm: "fcm",
-          totalTimeinContact: 50,
-          deviceID: 1001,
-          groupId: 1000),
-      ContactHistory(
-          contact: "user2",
-          fcm: "fcm",
-          totalTimeinContact: 15,
-          deviceID: 2001,
-          groupId: 2000),
-      ContactHistory(
-          contact: "user3",
-          fcm: "fcm",
-          totalTimeinContact: 10,
-          deviceID: 3001,
-          groupId: 3000),
+      ContactHistory(contact: "user1", fcm: "fcm", totalTimeinContact: 50, deviceID: 1001, groupId: 1000),
+      ContactHistory(contact: "user2", fcm: "fcm", totalTimeinContact: 15, deviceID: 2001, groupId: 2000),
+      ContactHistory(contact: "user3", fcm: "fcm", totalTimeinContact: 10, deviceID: 3001, groupId: 3000),
     ];
   }
 }

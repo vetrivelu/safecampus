@@ -6,7 +6,8 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
-final databaseRef = FirebaseDatabase.instance.ref();
+// final databaseRef = FirebaseDatabase.instance.ref();
+final databaseRef = FirebaseDatabase.instance.refFromURL('http://localhost:9000/?ns=kkm-beacon-default-rtdb');
 // .refFromURL("https://kkm-beacon.asia-southeast1.firebasedatabase.app/");
 final FirebaseFunctions functions = FirebaseFunctions.instance;
 final FirebaseFirestore firestore = FirebaseFirestore.instance;

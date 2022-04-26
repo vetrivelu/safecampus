@@ -22,11 +22,12 @@ import '../main.dart';
 import 'announcementpage.dart';
 import 'announcements_list.dart';
 import 'assessments/assesment_list.dart';
+import 'complaints/complaints_list.dart';
 import 'contact_list.dart';
 import 'notificationpage.dart';
 import 'quarantine.dart';
 import 'status/covid_history.dart';
-import 'whistleblower.dart';
+import 'complaints/whistleblower.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -65,19 +66,11 @@ class _HomeState extends State<Home> {
 
     FirebaseMessaging.onMessage.listen((message) async {
       if (message.notification != null) {
-        flutterLocalNotificationsPlugin.show(
-            1,
-            message.notification!.title,
-            message.notification!.body,
-            NotificationDetails(
-                android: AndroidNotificationDetails(channel.id, channel.name,
-                    channelDescription: channel.description)));
+        flutterLocalNotificationsPlugin.show(1, message.notification!.title, message.notification!.body,
+            NotificationDetails(android: AndroidNotificationDetails(channel.id, channel.name, channelDescription: channel.description)));
         var preferences = await prefs;
-        preferences.setStringList(
-            DateTime.now().toIso8601String().substring(0, 19) + ".000000", [
-          message.notification!.body.toString(),
-          message.notification!.title.toString()
-        ]);
+        preferences.setStringList(DateTime.now().toIso8601String().substring(0, 19) + ".000000",
+            [message.notification!.body.toString(), message.notification!.title.toString()]);
         print(message.notification!.body);
         print(message.notification!.title);
         print("message");
@@ -87,10 +80,7 @@ class _HomeState extends State<Home> {
     FirebaseMessaging.onMessageOpenedApp.listen((message) async {
       if (message.notification != null) {
         var preferences = await prefs;
-        preferences.setStringList(DateTime.now().toIso8601String(), [
-          message.notification!.body.toString(),
-          message.notification!.title.toString()
-        ]);
+        preferences.setStringList(DateTime.now().toIso8601String(), [message.notification!.body.toString(), message.notification!.title.toString()]);
         print(message.notification!.body);
         print(message.notification!.title);
         print("message");
@@ -108,8 +98,7 @@ class _HomeState extends State<Home> {
       }
     });
 
-    _firebaseMessaging.setForegroundNotificationPresentationOptions(
-        alert: true);
+    _firebaseMessaging.setForegroundNotificationPresentationOptions(alert: true);
     _firebaseMessaging.subscribeToTopic('Announcement');
     _firebaseMessaging.subscribeToTopic('Assessment');
 
@@ -150,8 +139,7 @@ class _HomeState extends State<Home> {
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             primary: Colors.red[800],
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(50)),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
                           ),
                           onPressed: () => Navigator.pop(context, 'Cancel'),
                           child: const Text('No'),
@@ -159,8 +147,7 @@ class _HomeState extends State<Home> {
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             primary: Colors.blue[800],
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(50)),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
                           ),
                           onPressed: () {
                             auth.signOut();
@@ -196,8 +183,7 @@ class _HomeState extends State<Home> {
           )
         ],
         title: Padding(
-          padding:
-              const EdgeInsets.only(left: 48, right: 56, top: 48, bottom: 48),
+          padding: const EdgeInsets.only(left: 48, right: 56, top: 48, bottom: 48),
           child: Image.asset(
             'assets/images/iukl_logo.png',
             fit: BoxFit.fitHeight,
@@ -212,22 +198,13 @@ class _HomeState extends State<Home> {
                 init: dashboard,
                 builder: (context) {
                   return CarouselSlider(
-                    options: CarouselOptions(
-                        height: 220,
-                        autoPlay: true,
-                        aspectRatio: 4 / 3,
-                        autoPlayInterval: const Duration(seconds: 10)),
-                    items: dashboard.carouselItems
-                        .map((element) => CustomNetworkImage(url: element))
-                        .toList(),
+                    options: CarouselOptions(height: 220, autoPlay: true, aspectRatio: 4 / 3, autoPlayInterval: const Duration(seconds: 10)),
+                    items: dashboard.carouselItems.map((element) => CustomNetworkImage(url: element)).toList(),
                   );
                 }),
           ),
           const Divider(),
-          PaddedText("Menu",
-              style: getText(context)
-                  .subtitle1!
-                  .copyWith(fontWeight: FontWeight.bold)),
+          PaddedText("Menu", style: getText(context).subtitle1!.copyWith(fontWeight: FontWeight.bold)),
           Wrap(
             direction: Axis.horizontal,
             children: [
@@ -262,6 +239,13 @@ class _HomeState extends State<Home> {
                 },
               ),
               Tile(
+                title: 'My Complaints',
+                image: 'assets/images/whistle blower.png',
+                onTap: () {
+                  Get.to(() => const MyAssessments());
+                },
+              ),
+              Tile(
                 title: 'Bulletin',
                 image: 'assets/images/announcement.png',
                 onTap: () {
@@ -275,41 +259,13 @@ class _HomeState extends State<Home> {
                   Get.to(() => const ProfilePage());
                 },
               ),
-              Row(
-                children: [
-                  GetBuilder(
-                      init: userController,
-                      builder: (context) {
-                        return Tile(
-                          title: 'Assesments',
-                          image: 'assets/images/profile.png',
-                          onTap: () {
-                            Get.to(() => AssessmentList());
-                          },
-                        );
-                      }),
-                  // Expanded(
-                  //     child: Card(
-                  //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-                  //   child: SizedBox(
-                  //     height: (getWidth(context) / 3) - 16,
-                  //     child: const Center(
-                  //         // child: ElevatedButton(
-                  //         //     onPressed: () {
-                  //         //       functions
-                  //         //           .httpsCallable('addUser')
-                  //         //           .call({"email": "test@gmail.com", "password": "12345678", "user": userController.user!.toJson()});
-                  //         //     },
-                  //         //     child: const Text("Test")),
-                  //         // child: Padding(
-                  //         //   padding: EdgeInsets.all(8.0),
-                  //         //   child: Text("Location status : \nYou need to have a device assigned to get the location"),
-                  //         // ),
-                  //         ),
-                  //   ),
-                  // ))
-                ],
-              ),
+              Tile(
+                title: 'Assesments',
+                image: 'assets/images/profile.png',
+                onTap: () {
+                  Get.to(() => AssessmentList());
+                },
+              )
             ],
           ),
         ],

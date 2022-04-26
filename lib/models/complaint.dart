@@ -2,11 +2,11 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:safecampus/controllers/auth_controller.dart';
+import 'package:safecampus/controllers/profile_controller.dart';
 import 'package:safecampus/models/response.dart';
 import '../firebase.dart';
 
-CollectionReference<Map<String, dynamic>> complaints =
-    firestore.collection('Complaints');
+CollectionReference<Map<String, dynamic>> complaints = firestore.collection('Complaints');
 
 class Complaint {
   Complaint({
@@ -16,6 +16,8 @@ class Complaint {
     required this.raisedBy,
     required this.raisedDate,
     this.files,
+    this.status = false,
+    this.owner = '',
   });
 
   String? attachment;
@@ -23,7 +25,9 @@ class Complaint {
   String description;
   String raisedBy;
   DateTime raisedDate;
-  List<String>? files;
+  bool status;
+  List<dynamic>? files;
+  String owner;
 
   factory Complaint.fromJson(Map<String, dynamic> json) => Complaint(
       attachment: json["attachment"],
@@ -31,6 +35,8 @@ class Complaint {
       description: json["description"],
       raisedBy: json["raisedBy"],
       raisedDate: json["raisedDate"].toDate(),
+      status: json['status'],
+      owner: json['owner'] ?? '',
       files: json['files'] ?? []);
 
   Map<String, dynamic> toJson() => {
@@ -40,6 +46,8 @@ class Complaint {
         "raisedBy": raisedBy,
         "raisedDate": raisedDate,
         "files": files,
+        "status": status,
+        'owner': owner,
       };
 
   String get name => raisedDate.microsecondsSinceEpoch.toString();
@@ -66,10 +74,11 @@ class Complaint {
   //   }
   // }
 
-  static Future<Response> createComplaint(
-      {required String title,
-      required String description,
-      required List<File> files}) async {
+  static Stream<QuerySnapshot<Map<String, dynamic>>> myCompaints() {
+    return complaints.where('raisedBy', isEqualTo: auth.uid).orderBy('raisedDate', descending: true).snapshots();
+  }
+
+  static Future<Response> createComplaint({required String title, required String description, required List<File> files}) async {
     List<String> url = [];
     var date = DateTime.now();
     try {
@@ -80,14 +89,9 @@ class Complaint {
         }
       }
       return Complaint(
-              files: url,
-              title: title,
-              description: description,
-              raisedBy: auth.uid.toString(),
-              raisedDate: date)
+              files: url, title: title, description: description, raisedBy: auth.uid.toString(), raisedDate: date, owner: userController.name)
           .add()
-          .then((value) => Response.success(
-              "Your Complaint has been submitted successfully"));
+          .then((value) => Response.success("Your Complaint has been submitted successfully"));
     } catch (error) {
       return Response.error(error.toString());
     }

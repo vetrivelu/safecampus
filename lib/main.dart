@@ -2,6 +2,8 @@
 
 import 'dart:typed_data';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -21,27 +23,21 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   final prefs = await SharedPreferences.getInstance();
   await prefs.reload();
   await prefs.setStringList(
-      DateTime.now().toIso8601String().substring(0, 19) + ".000000", [
-    message.notification!.body.toString(),
-    message.notification!.title.toString()
-  ]);
+      DateTime.now().toIso8601String().substring(0, 19) + ".000000", [message.notification!.body.toString(), message.notification!.title.toString()]);
 }
 
 AndroidNotificationChannel channel = AndroidNotificationChannel(
     'high_importance_channel', // id
     'High Importance Notifications', // title
-    description:
-        'This channel is used for important notifications.', // description
+    description: 'This channel is used for important notifications.', // description
     importance: Importance.max,
     playSound: true,
     sound: const RawResourceAndroidNotificationSound('notification'),
     vibrationPattern: Int64List.fromList([0, 1000, 1500, 1000]));
 
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 final Future<SharedPreferences> prefs = SharedPreferences.getInstance();
-const initializationSettings = InitializationSettings(
-    android: AndroidInitializationSettings('@mipmap/ic_launcher'));
+const initializationSettings = InitializationSettings(android: AndroidInitializationSettings('@mipmap/ic_launcher'));
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -49,6 +45,8 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
+  FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
 
   var preferences = await prefs;
 
@@ -56,8 +54,7 @@ Future<void> main() async {
 
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   await flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>()
+      .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
       ?.createNotificationChannel(channel);
   await firebaseMessaging.requestPermission(
     alert: true,
@@ -94,8 +91,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.red,
         textTheme: const TextTheme(
           headline1: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
-          headline6: TextStyle(
-              fontSize: 18, fontStyle: FontStyle.italic, color: Colors.white),
+          headline6: TextStyle(fontSize: 18, fontStyle: FontStyle.italic, color: Colors.white),
           bodyText1: TextStyle(fontSize: 14.0, color: Color(0xFFEF4C43)),
         ),
         tabBarTheme: const TabBarTheme(labelColor: Colors.white),

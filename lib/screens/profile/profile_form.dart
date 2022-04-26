@@ -31,9 +31,7 @@ class _ProfileFormState extends State<ProfileForm> {
     super.initState();
     if (userController.user != null) {
       controller = userController.formController;
-      dashboard.getName(controller.department) == null
-          ? controller.department = null
-          : doNothing();
+      dashboard.getName(controller.department) == null ? controller.department = null : doNothing();
       mode = FormMode.update;
     } else {
       controller = UserFormController.plain();
@@ -57,18 +55,12 @@ class _ProfileFormState extends State<ProfileForm> {
   List<DropdownMenuItem<UserType>>? get userTypeItems => UserType.values
       .map((e) => DropdownMenuItem(
           value: e,
-          child: Text(e
-              .toString()
-              .split('.')
-              .last
-              .split(RegExp('(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])'))
-              .map((e) => e.capitalizeFirst!)
-              .join(" "))))
+          child: Text(
+              e.toString().split('.').last.split(RegExp('(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])')).map((e) => e.capitalizeFirst!).join(" "))))
       .toList();
 
-  List<DropdownMenuItem<String?>>? get departmentItems => dashboard.departments
-      .map((e) => DropdownMenuItem<String>(value: e.id, child: Text(e.name)))
-      .toList();
+  List<DropdownMenuItem<String?>>? get departmentItems =>
+      dashboard.departments.map((e) => DropdownMenuItem<String>(value: e.id, child: Text(e.name))).toList();
 
   Future<File?> _cropImage(String path) async {
     File? croppedFile = await ImageCropper().cropImage(
@@ -113,6 +105,19 @@ class _ProfileFormState extends State<ProfileForm> {
     return null;
   }
 
+  String? icNumberValidator(String? val) {
+    if (val!.length <= 14 && val.isNotEmpty) {
+      var regex = RegExp(r'(([[0-9]{2})(0[0-9]|1[0-2])(0[0-9]|[12][0-9]|3[01]))-([0-9]{2})-([0-9]{4})');
+      if (regex.hasMatch(val)) {
+        return null;
+      } else {
+        return 'Please enter a valid IC Number';
+      }
+    } else {
+      return "IC Number should contain 12 charachters";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -120,15 +125,10 @@ class _ProfileFormState extends State<ProfileForm> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            mode == FormMode.registration
-                ? auth
-                    .signOut()
-                    .then((value) => Get.offAll(() => const AuthRouter()))
-                : Navigator.of(context).pop();
+            mode == FormMode.registration ? auth.signOut().then((value) => Get.offAll(() => const AuthRouter())) : Navigator.of(context).pop();
           },
         ),
-        title:
-            Text(userController.user != null ? "Edit Profile" : "Registration"),
+        title: Text(userController.user != null ? "Edit Profile" : "Registration"),
         centerTitle: true,
       ),
       //=====================================Floating Action Button Here..............
@@ -174,8 +174,7 @@ class _ProfileFormState extends State<ProfileForm> {
                       ),
                       TextButton(
                         onPressed: () async {
-                          var xfile = await ImagePicker()
-                              .pickImage(source: ImageSource.gallery);
+                          var xfile = await ImagePicker().pickImage(source: ImageSource.gallery);
                           if (xfile != null) {
                             controller.localFile = await _cropImage(xfile.path);
                           }
@@ -193,8 +192,7 @@ class _ProfileFormState extends State<ProfileForm> {
                   const Divider(),
                   CustomTextBox(
                       validator: requiredValidator,
-                      controller:
-                          TextEditingController(text: auth.currentUser!.email),
+                      controller: TextEditingController(text: auth.currentUser!.email),
                       hintText: 'Your Email',
                       labelText: 'Email',
                       enabled: false),
@@ -219,16 +217,13 @@ class _ProfileFormState extends State<ProfileForm> {
                         builder: (context) {
                           return CustomDropDown<String?>(
                               validator: (value) {
-                                return value != null
-                                    ? null
-                                    : "Please select a department";
+                                return value != null ? null : "Please select a department";
                               },
                               selectedValue: controller.department,
                               items: departmentItems,
                               labelText: "Department",
                               onChanged: (value) {
-                                controller.department =
-                                    value ?? controller.department;
+                                controller.department = value ?? controller.department;
                               });
                         }),
                   ),
@@ -246,13 +241,27 @@ class _ProfileFormState extends State<ProfileForm> {
                       hintText: "Enter ID",
                       keyboardType: TextInputType.text),
                   CustomTextBox(
-                      validator: requiredValidator,
+                      validator: controller.userType == UserType.foreignStudent ? requiredValidator : icNumberValidator,
                       controller: controller.superId,
-                      hintText: 'Enter your Passport or IC Number',
-                      labelText: controller.userType == UserType.foreignStudent
-                          ? 'Passport Number'
-                          : 'IC Number',
-                      keyboardType: TextInputType.name),
+                      onChanged: (val) {
+                        if (val.length == 7) {
+                          var lastChar = val.substring(val.length - 1);
+                          if (lastChar != '-') {
+                            controller.superId.text = controller.superId.text.substring(0, 6) + '-' + lastChar;
+                            controller.superId.selection = TextSelection.fromPosition(TextPosition(offset: controller.superId.text.length));
+                          }
+                        }
+                        if (val.length == 10) {
+                          var lastChar = val.substring(val.length - 1);
+                          if (lastChar != '-') {
+                            controller.superId.text = controller.superId.text.substring(0, 9) + '-' + lastChar;
+                            controller.superId.selection = TextSelection.fromPosition(TextPosition(offset: controller.superId.text.length));
+                          }
+                        }
+                      },
+                      hintText: '991214-12-5338',
+                      labelText: controller.userType == UserType.foreignStudent ? 'Passport Number' : 'IC Number',
+                      keyboardType: TextInputType.number),
                   Table(
                     columnWidths: const {1: FlexColumnWidth(2)},
                     children: [

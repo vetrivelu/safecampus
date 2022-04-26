@@ -32,9 +32,7 @@ class UserController extends GetxController {
   get countryCode => user?.bioData.countryCode;
   get phoneNumber => user?.bioData.phoneNumber;
 
-  List<String> get completedIds => user!.assessments != null
-      ? user!.assessments!.map((e) => e.id).toList()
-      : [];
+  List<String> get completedIds => user!.assessments != null ? user!.assessments!.map((e) => e.id).toList() : [];
 
   List<Assessment> get pendingAssesmentList {
     List<Assessment> assesments = [];
@@ -42,14 +40,11 @@ class UserController extends GetxController {
     if (completedIds.isEmpty) {
       return allAssesments;
     }
-    assesments = allAssesments
-        .where((element) => !completedIds.contains(element.id))
-        .toList();
+    assesments = allAssesments.where((element) => !completedIds.contains(element.id)).toList();
     return assesments;
   }
 
-  UserFormController get formController =>
-      UserFormController.fromProfile(user!);
+  UserFormController get formController => UserFormController.fromProfile(user!);
 
   loadProfile() {
     users.doc(auth.uid).get().then((value) {
@@ -66,11 +61,7 @@ class UserController extends GetxController {
   }
 
   loadQuarantine() {
-    users
-        .doc(id)
-        .get()
-        .then((value) => UserModel.fromJson(value.data()!))
-        .then((val) {
+    users.doc(id).get().then((value) => UserModel.fromJson(value.data()!)).then((val) {
       user?.quarantine = val.quarantine;
       update();
     });
@@ -95,40 +86,24 @@ class UserController extends GetxController {
   Future<void> createUser(UserFormController controller) async {
     var user = UserModel(bioData: controller.profile, uid: auth.uid!);
     if (controller.localFile != null) {
-      user.bioData.imageUrl = await storage
-          .ref("profiles")
-          .child(auth.uid!)
-          .putFile(controller.localFile!)
-          .then((snapshot) async {
+      user.bioData.imageUrl = await storage.ref("profiles").child(auth.uid!).putFile(controller.localFile!).then((snapshot) async {
         return await snapshot.ref.getDownloadURL();
       });
     }
-    users
-        .doc(user.uid)
-        .set(user.toJson())
-        .then((value) => null)
-        .catchError((error) => null);
+    users.doc(user.uid).set(user.toJson()).then((value) => null).catchError((error) => null);
   }
 
   Future updateUser(UserFormController controller) async {
     var profile = controller.profile;
     if (controller.localFile != null) {
-      profile.imageUrl = await storage
-          .ref("profiles")
-          .child(auth.uid!)
-          .putFile(controller.localFile!)
-          .then((snapshot) async {
+      profile.imageUrl = await storage.ref("profiles").child(auth.uid!).putFile(controller.localFile!).then((snapshot) async {
         return await snapshot.ref.getDownloadURL();
       });
     }
-    return users.doc(auth.uid).update({
-      "bioData": profile.toJson(),
-      "search": profile.searchString
-    }).then((value) {
+    return users.doc(auth.uid).update({"bioData": profile.toJson(), "search": profile.searchString}).then((value) {
       print(user!.device?.toJson());
 
-      return response.Response.success(
-          "Your user profile has been updated successfully!");
+      return response.Response.success("Your user profile has been updated successfully!");
     }).catchError((error) => response.Response.error(error.toString()));
   }
 
@@ -142,13 +117,11 @@ class UserController extends GetxController {
     }).then((value) {
       update();
       return response.Response.success("Your Covid Information has been added");
-    }).onError(
-        (error, stackTrace) => response.Response.error(error.toString()));
+    }).onError((error, stackTrace) => response.Response.error(error.toString()));
   }
 
   updateToken() {
-    firebaseMessaging.getToken().then((value) =>
-        users.doc(auth.uid!).update({"fcm": value}).then((value) => null));
+    firebaseMessaging.getToken().then((value) => users.doc(auth.uid!).update({"fcm": value}).then((value) => null));
   }
 
   listenContacts() {
@@ -159,32 +132,22 @@ class UserController extends GetxController {
 
   listenAssesments() {
     Assessment.getAssesments().listen((snapshots) {
-      allAssesments =
-          snapshots.docs.map((e) => Assessment.fromJson(e.data())).toList();
+      allAssesments = snapshots.docs.map((e) => Assessment.fromJson(e.data())).toList();
 
       update();
     });
   }
 
   listenMyAssesments() {
-    users
-        .doc(auth.uid)
-        .collection("Assessments")
-        .snapshots()
-        .listen((snapshots) {
-      user!.assessments =
-          snapshots.docs.map((e) => Assessment.fromJson(e.data())).toList();
+    users.doc(auth.uid).collection("Assessments").snapshots().listen((snapshots) {
+      user!.assessments = snapshots.docs.map((e) => Assessment.fromJson(e.data())).toList();
       update();
     });
   }
 
   loadContacts() async {
     List<ContactHistory>? returns = [];
-    Map? contacts = await databaseRef
-            .child("contacts")
-            .child(auth.uid!)
-            .get()
-            .then((result) {
+    Map? contacts = await databaseRef.child("contacts").child(auth.uid!).get().then((result) {
           return result.value;
         }) as Map? ??
         {};
@@ -197,8 +160,7 @@ class UserController extends GetxController {
         groupId: json["groupId"],
         deviceID: json["deviceId"],
         gateWay: json["gateWay"],
-        lastContact:
-            DateTime.fromMillisecondsSinceEpoch(json["lastContact"] * 1000),
+        lastContact: DateTime.fromMillisecondsSinceEpoch(json["lastContact"]),
       ));
     }
 
@@ -212,12 +174,8 @@ class UserController extends GetxController {
   }
 
   Future<void> loadAssesments() async {
-    user!.assessments = await users
-        .doc(auth.uid)
-        .collection("Assessments")
-        .get()
-        .then((value) =>
-            value.docs.map((e) => Assessment.fromJson(e.data())).toList());
+    user!.assessments =
+        await users.doc(auth.uid).collection("Assessments").get().then((value) => value.docs.map((e) => Assessment.fromJson(e.data())).toList());
     update();
   }
 }
@@ -262,16 +220,10 @@ class UserFormController {
         name: TextEditingController(text: user.bioData.name),
         id: TextEditingController(text: user.bioData.id),
         superId: TextEditingController(text: user.bioData.superId),
-        groupid: user.device == null
-            ? TextEditingController()
-            : TextEditingController(text: user.device!.groupId.toString()),
-        deviceid: user.device == null
-            ? TextEditingController()
-            : TextEditingController(text: user.device!.deviceId.toString()),
-        permanentAddress:
-            TextEditingController(text: user.bioData.houseAddress),
-        currentAddress:
-            TextEditingController(text: user.bioData.residenceAddress),
+        groupid: user.device == null ? TextEditingController() : TextEditingController(text: user.device!.groupId.toString()),
+        deviceid: user.device == null ? TextEditingController() : TextEditingController(text: user.device!.deviceId.toString()),
+        permanentAddress: TextEditingController(text: user.bioData.houseAddress),
+        currentAddress: TextEditingController(text: user.bioData.residenceAddress),
         countryCode: TextEditingController(text: user.bioData.countryCode),
         phoneNumber: TextEditingController(text: user.bioData.phoneNumber),
         department: user.bioData.department,
@@ -282,8 +234,7 @@ class UserFormController {
 
   factory UserFormController.plain() => UserFormController(
       name: TextEditingController(),
-      department:
-          dashboard.departments.isEmpty ? null : dashboard.departments.first.id,
+      department: dashboard.departments.isEmpty ? null : dashboard.departments.first.id,
       deviceid: TextEditingController(),
       groupid: TextEditingController(),
       id: TextEditingController(),
