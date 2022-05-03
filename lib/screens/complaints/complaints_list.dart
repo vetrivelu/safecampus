@@ -9,8 +9,8 @@ import 'package:safecampus/screens/announcementpage.dart';
 import 'package:flutter/services.dart';
 import '../announcements_list.dart';
 
-class MyAssessments extends StatelessWidget {
-  const MyAssessments({Key? key}) : super(key: key);
+class MyComplaints extends StatelessWidget {
+  const MyComplaints({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

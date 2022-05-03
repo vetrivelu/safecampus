@@ -45,8 +45,8 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
-  FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
+  // await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
+  // FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
 
   var preferences = await prefs;
 

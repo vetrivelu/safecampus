@@ -57,6 +57,8 @@ class _HomeState extends State<Home> {
             Get.to(() => ContactHistoryDetails());
           } else if (message.notification!.title == "Quarantine") {
             Get.to(() => QuarantinePage(user: userController.user!));
+          } else if (message.notification!.title == "Complaint resolved") {
+            Get.to(() => const MyComplaints());
           } else {
             Get.to(() => const AnnouncementList());
           }
@@ -66,11 +68,19 @@ class _HomeState extends State<Home> {
 
     FirebaseMessaging.onMessage.listen((message) async {
       if (message.notification != null) {
-        flutterLocalNotificationsPlugin.show(1, message.notification!.title, message.notification!.body,
-            NotificationDetails(android: AndroidNotificationDetails(channel.id, channel.name, channelDescription: channel.description)));
+        flutterLocalNotificationsPlugin.show(
+            1,
+            message.notification!.title,
+            message.notification!.body,
+            NotificationDetails(
+                android: AndroidNotificationDetails(channel.id, channel.name,
+                    channelDescription: channel.description)));
         var preferences = await prefs;
-        preferences.setStringList(DateTime.now().toIso8601String().substring(0, 19) + ".000000",
-            [message.notification!.body.toString(), message.notification!.title.toString()]);
+        preferences.setStringList(
+            DateTime.now().toIso8601String().substring(0, 19) + ".000000", [
+          message.notification!.body.toString(),
+          message.notification!.title.toString()
+        ]);
         print(message.notification!.body);
         print(message.notification!.title);
         print("message");
@@ -80,7 +90,10 @@ class _HomeState extends State<Home> {
     FirebaseMessaging.onMessageOpenedApp.listen((message) async {
       if (message.notification != null) {
         var preferences = await prefs;
-        preferences.setStringList(DateTime.now().toIso8601String(), [message.notification!.body.toString(), message.notification!.title.toString()]);
+        preferences.setStringList(DateTime.now().toIso8601String(), [
+          message.notification!.body.toString(),
+          message.notification!.title.toString()
+        ]);
         print(message.notification!.body);
         print(message.notification!.title);
         print("message");
@@ -93,12 +106,13 @@ class _HomeState extends State<Home> {
           Get.to(QuarantinePage(user: userController.user!));
         } else {
           Get.offAll(const AuthRouter());
-          Get.to(() => const AnnouncementList());
+          // Get.to(() => const AnnouncementList());
         }
       }
     });
 
-    _firebaseMessaging.setForegroundNotificationPresentationOptions(alert: true);
+    _firebaseMessaging.setForegroundNotificationPresentationOptions(
+        alert: true);
     _firebaseMessaging.subscribeToTopic('Announcement');
     _firebaseMessaging.subscribeToTopic('Assessment');
 
@@ -139,7 +153,8 @@ class _HomeState extends State<Home> {
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             primary: Colors.red[800],
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50)),
                           ),
                           onPressed: () => Navigator.pop(context, 'Cancel'),
                           child: const Text('No'),
@@ -147,7 +162,8 @@ class _HomeState extends State<Home> {
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             primary: Colors.blue[800],
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50)),
                           ),
                           onPressed: () {
                             auth.signOut();
@@ -183,7 +199,8 @@ class _HomeState extends State<Home> {
           )
         ],
         title: Padding(
-          padding: const EdgeInsets.only(left: 48, right: 56, top: 48, bottom: 48),
+          padding:
+              const EdgeInsets.only(left: 48, right: 56, top: 48, bottom: 48),
           child: Image.asset(
             'assets/images/iukl_logo.png',
             fit: BoxFit.fitHeight,
@@ -198,13 +215,23 @@ class _HomeState extends State<Home> {
                 init: dashboard,
                 builder: (context) {
                   return CarouselSlider(
-                    options: CarouselOptions(height: 220, autoPlay: true, aspectRatio: 4 / 3, autoPlayInterval: const Duration(seconds: 10)),
-                    items: dashboard.carouselItems.map((element) => CustomNetworkImage(url: element)).toList(),
+                    options: CarouselOptions(
+                        height: 220,
+                        autoPlay: true,
+                        aspectRatio: 4 / 3,
+                        autoPlayInterval: const Duration(seconds: 10),
+                        enableInfiniteScroll: false),
+                    items: dashboard.carouselItems
+                        .map((element) => CustomNetworkImage(url: element))
+                        .toList(),
                   );
                 }),
           ),
           const Divider(),
-          PaddedText("Menu", style: getText(context).subtitle1!.copyWith(fontWeight: FontWeight.bold)),
+          PaddedText("Menu",
+              style: getText(context)
+                  .subtitle1!
+                  .copyWith(fontWeight: FontWeight.bold)),
           Wrap(
             direction: Axis.horizontal,
             children: [
@@ -242,7 +269,7 @@ class _HomeState extends State<Home> {
                 title: 'My Complaints',
                 image: 'assets/images/whistle blower.png',
                 onTap: () {
-                  Get.to(() => const MyAssessments());
+                  Get.to(() => const MyComplaints());
                 },
               ),
               Tile(
