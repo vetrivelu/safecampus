@@ -29,7 +29,7 @@ import 'quarantine.dart';
 import 'status/covid_history.dart';
 import 'complaints/whistleblower.dart';
 
-class Home extends StatefulWidget {
+class  Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
 
   @override
