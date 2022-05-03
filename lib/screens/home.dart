@@ -43,7 +43,7 @@ class _HomeState extends State<Home> {
   }
 
   @override
-  void initState() {
+  void  initState() {
     super.initState();
     _firebaseMessaging.getInitialMessage().then((message) {
       if (message != null) {
